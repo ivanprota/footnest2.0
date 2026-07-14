@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.footnest.footnest_backend.dto.team.TeamCreateDTO;
 import com.footnest.footnest_backend.dto.team.TeamDTO;
 import com.footnest.footnest_backend.entity.Team;
 import com.footnest.footnest_backend.exception.ResourceNotFoundException;
@@ -33,8 +34,14 @@ public class TeamService {
                     .orElseThrow(() -> new ResourceNotFoundException("Squadra non trovata con id: " +id));
     }
 
-    public Team save(Team team) {
-        return teamRepository.save(team);
+    public TeamDTO save(TeamCreateDTO dto) {
+        Team team = new Team();
+        team.setName(dto.getName());
+        team.setLogoPath(dto.getLogoPath());
+
+        Team saved = teamRepository.save(team);
+
+        return teamMapper.toDTO(saved);
     }
 
     public Team update(Long id, Team team) {

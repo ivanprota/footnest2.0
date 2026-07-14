@@ -34,6 +34,19 @@ class _TeamsScreenState extends State<TeamsScreen> {
         title: const Text(
           "Squadre",
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            tooltip: "Aggiungi squadra",
+            onPressed: () async {
+              await context.push(AppRoutes.addTeam);
+
+              setState(() {
+                teamsFuture = teamService.getTeams();
+              });
+            },
+          )
+        ],
       ),
       body: FutureBuilder<List<Team>>(
         future: teamsFuture,

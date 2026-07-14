@@ -9,6 +9,7 @@ import lombok.*;
 public class CompetitionSeasonDTO {
 
     private Long id;
+    private String competitionName;
     private String seasonName;
 
 }

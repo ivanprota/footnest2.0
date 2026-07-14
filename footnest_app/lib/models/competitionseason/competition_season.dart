@@ -1,11 +1,13 @@
 class CompetitionSeason {
 
   final int id;
+  final String competitionName;
   final String seasonName;
 
 
   CompetitionSeason({
     required this.id,
+    required this.competitionName,
     required this.seasonName,
   });
 
@@ -16,9 +18,14 @@ class CompetitionSeason {
 
     return CompetitionSeason(
       id: json['id'],
-      seasonName: json['seasonName'],
+      competitionName:
+          json['competitionName'],
+      seasonName:
+          json['seasonName'],
     );
-
   }
 
+
+  String get displayName =>
+      '$competitionName $seasonName';
 }

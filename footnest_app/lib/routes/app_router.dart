@@ -2,7 +2,8 @@ import 'package:go_router/go_router.dart';
 
 import '/screens/home/home_screen.dart';
 import '/screens/teams/team_details_screen.dart';
-import '../screens/competitions/competition_details_screen.dart';
+import '/screens/teams/add_team_screen.dart';
+import '/screens/competitions/competition_details_screen.dart';
 import 'routes.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -13,6 +14,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.home,
       builder: (context, state) => const HomeScreen(),
+    ),
+
+    GoRoute(
+      path: AppRoutes.addTeam,
+      builder: (context,state) =>
+          const AddTeamScreen(),
     ),
 
     GoRoute(

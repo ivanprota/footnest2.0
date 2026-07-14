@@ -5,4 +5,6 @@ abstract final class AppRoutes {
   static const matches = '/matches';
 
   static const competitionDetails = '/competitions/:id';
+  static const addTeam = "/teams/add";
+
 }

@@ -47,6 +47,7 @@ public class CompetitionMapper {
             .map(season ->
                 new CompetitionSeasonDTO(
                     season.getId(),
+                    competition.getName(),
                     season.getSeason().getName()
                 )
             )

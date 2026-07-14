@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../config/api_config.dart';
+import '/config/api_config.dart';
+import 'dart:io';
 
 class ApiClient {
 
@@ -73,6 +74,46 @@ class ApiClient {
     throw Exception(
       "Errore HTTP ${response.statusCode}: ${response.body}"
     );
+  }
+
+  Future uploadFile(
+    String endpoint,
+    File file,
+    Map<String, String> fields,
+  ) async {
+
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('$baseUrl$endpoint'),
+    );
+
+
+    request.headers.addAll({
+      "Accept": "application/json",
+    });
+
+
+    fields.forEach((key, value) {
+      request.fields[key] = value;
+    });
+
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        file.path,
+      ),
+    );
+
+
+    final streamedResponse = await request.send();
+
+
+    final response =
+        await http.Response.fromStream(streamedResponse);
+
+
+    return _handleResponse(response);
   }
   
 }

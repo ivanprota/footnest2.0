@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.footnest.footnest_backend.dto.team.TeamCreateDTO;
 import com.footnest.footnest_backend.dto.team.TeamDTO;
 import com.footnest.footnest_backend.entity.Team;
 import com.footnest.footnest_backend.service.TeamService;
@@ -39,8 +40,8 @@ public class TeamController {
     }
 
     @PostMapping
-    public Team create(@RequestBody Team team) {
-        return teamService.save(team);
+    public ResponseEntity<TeamDTO> create(@RequestBody TeamCreateDTO dto) {
+        return ResponseEntity.ok(teamService.save(dto));
     }
 
     @PutMapping("/{id}")

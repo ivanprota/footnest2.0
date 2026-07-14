@@ -1,4 +1,5 @@
-import '../models/team/team.dart';
+import '/models/team/team.dart';
+import '/models/team/team_create_request.dart';
 import 'api_client.dart';
 
 class TeamService {
@@ -16,6 +17,16 @@ class TeamService {
           (json) => Team.fromJson(json)
         )
         .toList();
+  }
+
+  Future<Team> createTeam(TeamCreateRequest request) async 
+  {
+    final response = await apiClient.post(
+      '/teams/register',
+      request.toJson(),
+    );
+
+    return Team.fromJson(response);
   }
 
 }

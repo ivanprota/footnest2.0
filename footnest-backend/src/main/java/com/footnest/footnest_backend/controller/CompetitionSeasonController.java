@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.footnest.footnest_backend.dto.competitionseason.CompetitionSeasonDTO;
 import com.footnest.footnest_backend.entity.CompetitionSeason;
 import com.footnest.footnest_backend.service.CompetitionSeasonService;
 
@@ -26,7 +27,7 @@ public class CompetitionSeasonController {
     }
 
     @GetMapping
-    public List<CompetitionSeason> getAll() {
+    public List<CompetitionSeasonDTO> getAll() {
         return competitionSeasonService.findAll();
     }
 
