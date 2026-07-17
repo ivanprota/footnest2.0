@@ -44,6 +44,13 @@ public class FootballMatch {
 
     private Integer awayGoals;
 
+    @Column(name = "matchday")
+    private Integer matchday;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private MatchStatus status;
+
     @OneToMany(mappedBy = "match")
     private List<MatchStatistics> statistics = new ArrayList<>();
 
@@ -53,15 +60,4 @@ public class FootballMatch {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "season_id", nullable = false)
     private Season season;
-
-
-    @Enumerated(EnumType.STRING)
-    private MatchStatus status;
-
-
-    public enum MatchStatus {
-        SCHEDULED,
-        PLAYED,
-        CANCELLED
-    }
 }
