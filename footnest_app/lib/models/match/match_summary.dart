@@ -6,8 +6,10 @@ class MatchSummary {
   final String homeLogo;
   final String awayLogo;
   final DateTime date;
+  final String? kickoffTime;
   final int? homeGoals;
   final int? awayGoals;
+  final int matchday;
   final String status;
 
   MatchSummary({
@@ -18,8 +20,10 @@ class MatchSummary {
     required this.homeLogo,
     required this.awayLogo,
     required this.date,
+    required this.kickoffTime,
     required this.homeGoals,
     required this.awayGoals,
+    required this.matchday,
     required this.status,
 
   });
@@ -32,10 +36,21 @@ class MatchSummary {
       homeLogo: json['homeLogo'],
       awayLogo: json['awayLogo'],
       date: DateTime.parse(json['date']),
+      kickoffTime: json['kickoffTime'],
       homeGoals: json['homeGoals'],
       awayGoals: json['awayGoals'],
+      matchday: json['matchday'],
       status: json['status'],
     );
+  }
+
+  String get kickoffText {
+
+    if (kickoffTime == null || kickoffTime!.isEmpty) {
+      return "--:--";
+    }
+
+    return kickoffTime!.substring(0, 5);
   }
 
 }

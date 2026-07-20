@@ -7,6 +7,7 @@ import '/services/team_details_service.dart';
 import '/services/standing_service.dart';
 import '/services/competition_season_service.dart';
 import '/services/upload_service.dart';
+import '/services/football_match_service.dart';
 
 
 final locator = GetIt.instance;
@@ -52,6 +53,12 @@ void setupLocator() {
 
   locator.registerLazySingleton<UploadService>(
     () => UploadService(
+      locator<ApiClient>(),
+    ),
+  );
+
+  locator.registerLazySingleton<FootballMatchService>(
+    () => FootballMatchService(
       locator<ApiClient>(),
     ),
   );
