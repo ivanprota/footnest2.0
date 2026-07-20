@@ -45,4 +45,16 @@ public interface FootballMatchRepository extends JpaRepository<FootballMatch, Lo
             Team awayTeam
     );
 
+    @Query("""
+        SELECT m
+        FROM FootballMatch m
+        JOIN FETCH m.homeTeam
+        JOIN FETCH m.awayTeam
+        JOIN FETCH m.competitionSeason cs
+        JOIN FETCH cs.competition
+        WHERE m.date = :date
+        ORDER BY cs.competition.name, m.id
+    """)
+    List<FootballMatch> findMatchesByDate(@Param("date") LocalDate date);
+
 }

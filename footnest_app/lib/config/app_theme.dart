@@ -10,6 +10,8 @@ class AppTheme {
         primary: const Color(0xff00C853),
         secondary: const Color(0xff69F0AE),
         surface: const Color(0xff181B22),
+        onSurface: Colors.white,
+        outline: Color(0xff2D313D)
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Color(0xff0F1115),
@@ -23,7 +25,7 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         color: const Color(0xff181B22),
-        elevation: 4,
+        elevation: 0,
         margin: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 8,
@@ -32,6 +34,9 @@ class AppTheme {
           borderRadius: BorderRadius.all(
             Radius.circular(18),
           ),
+          side: const BorderSide(
+            color: Color(0xff2D313D)
+          )
         ),
       ),
       textTheme: const TextTheme(
@@ -64,6 +69,18 @@ class AppTheme {
         backgroundColor: Color(0xff00C853),
         foregroundColor: Colors.white,
       ),
+      dividerTheme: const DividerThemeData(
+        color: Color(0xff2D313D),
+        thickness: 1
+      ),
+      iconTheme: const IconThemeData(
+        color: Colors.white70,
+        size: 22
+      ),
+      listTileTheme: const ListTileThemeData(
+        iconColor: Colors.white70,
+        textColor: Colors.white
+      )
     );
   }
 }

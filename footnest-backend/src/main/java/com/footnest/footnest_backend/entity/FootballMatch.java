@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class FootballMatch {
     @Column(nullable = false)
     private LocalDate date;
 
+    private LocalTime kickoffTime;
 
     private Integer homeGoals;
 
