@@ -13,6 +13,8 @@ public interface StandingRepository extends JpaRepository<Standing, Long> {
 
     List<Standing> findByCompetitionSeasonIdOrderByPointsDesc(Long competitionSeasonId);
 
+    List<Standing> findByCompetitionSeasonId(Long competitionSeasonId);
+
     Optional<Standing> findByTeamIdAndCompetitionSeasonId(
             Long teamId,
             Long competitionSeasonId

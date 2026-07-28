@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.footnest.footnest_backend.entity.FootballMatch;
+import com.footnest.footnest_backend.entity.MatchStatus;
 import com.footnest.footnest_backend.entity.Team;
 
 public interface FootballMatchRepository extends JpaRepository<FootballMatch, Long> {
@@ -59,5 +60,10 @@ public interface FootballMatchRepository extends JpaRepository<FootballMatch, Lo
     List<FootballMatch> findMatchesByDate(@Param("date") LocalDate date);
 
     Optional<FootballMatch> findById(Long id);
+
+    List<FootballMatch> findByCompetitionSeasonIdAndStatus(
+        Long competitionSeasonId,
+        MatchStatus status
+    );
 
 }

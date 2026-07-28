@@ -8,8 +8,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.footnest.footnest_backend.dto.standing.StandingDTO;
+import com.footnest.footnest_backend.entity.FootballMatch;
+import com.footnest.footnest_backend.entity.MatchStatistics;
+import com.footnest.footnest_backend.entity.MatchStatus;
 import com.footnest.footnest_backend.entity.Standing;
 import com.footnest.footnest_backend.exception.ResourceNotFoundException;
+import com.footnest.footnest_backend.repository.FootballMatchRepository;
 import com.footnest.footnest_backend.repository.StandingRepository;
 
 @Service
@@ -17,10 +21,16 @@ public class StandingService {
     
     private final StandingMapper standingMapper;
     private final StandingRepository standingRepository;
+    private final FootballMatchRepository footballMatchRepository;
 
-    public StandingService(StandingRepository standingRepository, StandingMapper standingMapper) {
+    public StandingService(
+        StandingRepository standingRepository, 
+        StandingMapper standingMapper, 
+        FootballMatchRepository footballMatchRepository) 
+    {
         this.standingRepository = standingRepository;
         this.standingMapper = standingMapper;
+        this.footballMatchRepository = footballMatchRepository;
     }
 
     public List<Standing> findAll() {
@@ -70,6 +80,125 @@ public class StandingService {
         }
 
         standingRepository.deleteById(id);
+    }
+
+    public void recalculateStandings(Long competitionSeasonId) {
+        List<Standing> standings = standingRepository.findByCompetitionSeasonId(competitionSeasonId);
+        for (Standing standing : standings) {
+
+            standing.setPlayed(0);
+
+            standing.setWins(0);
+            standing.setDraws(0);
+            standing.setLosses(0);
+
+            standing.setGoalsFor(0);
+            standing.setGoalsAgainst(0);
+
+            standing.setPoints(0);
+
+            standing.setTotalXg(0.0);
+        }
+
+        List<FootballMatch> matches =
+                footballMatchRepository
+                        .findByCompetitionSeasonIdAndStatus(
+                                competitionSeasonId,
+                                MatchStatus.PLAYED
+                        );
+
+        for (FootballMatch match : matches) {
+
+            Standing homeStanding =
+                    standings.stream()
+                            .filter(s ->
+                                    s.getTeam().getId().equals(
+                                            match.getHomeTeam().getId()))
+                            .findFirst()
+                            .orElseThrow();
+
+            Standing awayStanding =
+                    standings.stream()
+                            .filter(s ->
+                                    s.getTeam().getId().equals(
+                                            match.getAwayTeam().getId()))
+                            .findFirst()
+                            .orElseThrow();
+
+            updateStanding(
+                    homeStanding,
+                    awayStanding,
+                    match
+            );
+        }
+
+        standingRepository.saveAll(standings);
+    }
+
+    private void updateStanding(Standing home, Standing away, FootballMatch match) {
+
+        int homeGoals = match.getHomeGoals();
+        int awayGoals = match.getAwayGoals();
+
+        home.setPlayed(home.getPlayed() + 1);
+        away.setPlayed(away.getPlayed() + 1);
+
+        home.setGoalsFor(home.getGoalsFor() + homeGoals);
+        home.setGoalsAgainst(home.getGoalsAgainst() + awayGoals);
+
+        away.setGoalsFor(away.getGoalsFor() + awayGoals);
+        away.setGoalsAgainst(away.getGoalsAgainst() + homeGoals);
+
+        if(homeGoals > awayGoals) {
+            home.setWins(home.getWins() + 1);
+            away.setLosses(away.getLosses() + 1);
+            home.setPoints(home.getPoints() + 3);
+        } 
+        else if(homeGoals < awayGoals) {
+            away.setWins(away.getWins() + 1);
+            home.setLosses(home.getLosses() + 1);
+            away.setPoints(away.getPoints() + 3);
+        } 
+        else {
+            home.setDraws(home.getDraws() + 1);
+            away.setDraws(away.getDraws() + 1);
+            home.setPoints(home.getPoints() + 1);
+            away.setPoints(away.getPoints() + 1);
+        }
+
+        if (match.getStatistics() != null) {
+
+            for (MatchStatistics stat : match.getStatistics()) {
+
+                if (stat.getXg() == null) {
+                    continue;
+                }
+
+
+                if (stat.getTeam().getId()
+                        .equals(home.getTeam().getId())) {
+
+                    home.setTotalXg(
+                            home.getTotalXg()
+                                + stat.getXg()
+                    );
+
+                }
+
+
+                if (stat.getTeam().getId()
+                        .equals(away.getTeam().getId())) {
+
+                    away.setTotalXg(
+                            away.getTotalXg()
+                                + stat.getXg()
+                    );
+
+                }
+
+            }
+        }
+
     }
 
 }

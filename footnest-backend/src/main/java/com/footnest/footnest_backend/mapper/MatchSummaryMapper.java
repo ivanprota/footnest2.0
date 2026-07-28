@@ -37,6 +37,7 @@ public class MatchSummaryMapper {
         dto.setDate(match.getDate());
         dto.setHomeGoals(match.getHomeGoals());
         dto.setAwayGoals(match.getAwayGoals());
+        dto.setMatchday(match.getMatchday());
         dto.setStatus(
             match.getStatus().name()
         );

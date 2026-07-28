@@ -41,6 +41,19 @@ class MatchStatisticsSectionState extends State<MatchStatisticsSection> {
 
   }
 
+  bool hasInsertedStatistics() {
+
+    for(final controller in controllers.values){
+
+      if(controller.text.trim().isNotEmpty){
+        return true;
+      }
+
+    }
+
+    return false;
+  }
+
   Map<String, dynamic> buildPayload(String prefix) {
     return {
 
@@ -132,6 +145,8 @@ class MatchStatisticsSectionState extends State<MatchStatisticsSection> {
   }
 
   Future<void> saveAllStatistics() async {
+
+    if (!hasInsertedStatistics()) return;
 
     final homeStats =
         widget.match.statistics.where(

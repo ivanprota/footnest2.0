@@ -30,16 +30,19 @@ public class FootballMatchService {
     private final FootballMatchMapper footballMatchMapper;
     private final CompetitionSeasonMapper competitionSeasonMapper;
     private final MatchStatisticsMapper matchStatisticsMapper;
+    private final StandingService standingService;
 
     public FootballMatchService(
         FootballMatchRepository footballMatchRepository, 
         FootballMatchMapper footballMatchMapper,
         CompetitionSeasonMapper competitionSeasonMapper,
-        MatchStatisticsMapper matchStatisticsMapper) {
+        MatchStatisticsMapper matchStatisticsMapper,
+        StandingService standingService) {
         this.footballMatchRepository = footballMatchRepository;
         this.footballMatchMapper = footballMatchMapper;
         this.competitionSeasonMapper = competitionSeasonMapper;
         this.matchStatisticsMapper = matchStatisticsMapper;
+        this.standingService = standingService;
     }
 
     public List<FootballMatch> findAll() {
@@ -173,6 +176,7 @@ public class FootballMatchService {
         }
 
         footballMatchRepository.save(match);
+        standingService.recalculateStandings(match.getCompetitionSeason().getId());
 
         return getMatchDetail(id);
 

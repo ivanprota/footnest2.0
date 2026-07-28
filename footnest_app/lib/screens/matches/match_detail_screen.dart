@@ -33,7 +33,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
   bool editing = false;
 
   bool saving = false;
-  bool savingStatistics = false;
 
   String? selectedStatus;
 
@@ -123,25 +122,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
         },
       );
 
-      setState(() {
-        editing = false;
-      });
-
-      await loadMatch();
-
-      if(mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(
-              const SnackBar(
-                behavior:
-                    SnackBarBehavior.floating,
-                content:
-                    Text(
-                      "Partita aggiornata",
-                    ),
-              ),
-            );
-      }
     }
     catch(e) {
       debugPrint(e.toString());
@@ -155,51 +135,138 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
     }
   }
 
+  bool hasValidResult() {
+
+    final home =
+        homeGoalsController.text.trim();
+
+    final away =
+        awayGoalsController.text.trim();
+
+
+    return home.isNotEmpty &&
+          away.isNotEmpty &&
+          int.tryParse(home) != null &&
+          int.tryParse(away) != null;
+
+  }
+
   Future saveAll() async {
+
+    final homeGoals =
+        homeGoalsController.text.trim();
+
+    final awayGoals =
+        awayGoalsController.text.trim();
+
+
+    final hasHomeGoals =
+        homeGoals.isNotEmpty;
+
+    final hasAwayGoals =
+        awayGoals.isNotEmpty;
+
+
+    final hasStatistics =
+        match!.statistics.length > 0 ||
+        statisticsKey.currentState
+            ?.hasInsertedStatistics() == true;
+
+
+    // Controllo risultato incompleto
+    if (hasHomeGoals != hasAwayGoals) {
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+            const SnackBar(
+              content:
+                  Text(
+                    "Inserire entrambi i risultati della partita",
+                  ),
+            ),
+          );
+
+      return;
+    }
+
+
+    // Controllo statistiche senza risultato
+    if (hasStatistics &&
+        (!hasHomeGoals || !hasAwayGoals)) {
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+            const SnackBar(
+              content:
+                  Text(
+                    "Per salvare le statistiche devi prima inserire il risultato",
+                  ),
+            ),
+          );
+
+      return;
+    }
+
+
     await saveMatch();
+
+
     await statisticsKey.currentState
         ?.saveAllStatistics();
+
+
+    await loadMatch();
+
+
+    if(mounted){
+
+      setState(() {
+        editing = false;
+      });
+
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+            const SnackBar(
+              behavior:
+                  SnackBarBehavior.floating,
+              content:
+                  Text(
+                    "Partita aggiornata",
+                  ),
+            ),
+          );
+    }
+
   }
 
   Future saveStatistics(int id, Map<String,dynamic> body) async {
 
-    if(savingStatistics) return;
+    try {
 
-    setState(() {
-      savingStatistics = true;
-    });
-
-    try{
       if(id == -1) {
+
         await matchService.createStatistics(body);
+
       }
       else {
-        await matchService.updateStatistics(id, body);
+
+        await matchService.updateStatistics(
+          id,
+          body,
+        );
+
       }
 
       await loadMatch();
 
-      if(mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(
-              const SnackBar(
-                behavior: SnackBarBehavior.floating,
-                content:
-                    Text("Statistiche salvate"),
-              ),
-            );
-      }
     }
     catch(e) {
+
       debugPrint(e.toString());
+
     }
-    finally {
-      if(mounted) {
-        setState(() {
-          savingStatistics = false;
-        });
-      }
-    }
+
   }
 
   Future toggleEditing() async {

@@ -23,17 +23,20 @@ public class MatchStatisticsService {
     private final MatchStatisticsRepository matchStatisticsRepository;
     private final FootballMatchRepository footballMatchRepository;
     private final TeamRepository teamRepository;
+    private final StandingService standingService;
 
     public MatchStatisticsService(
         MatchStatisticsRepository matchStatisticsRepository, 
         MatchStatisticsMapper matchStatisticsMapper,
         FootballMatchRepository footballMatchRepository,
-        TeamRepository teamRepository) 
+        TeamRepository teamRepository,
+        StandingService standingService) 
     {
         this.matchStatisticsRepository = matchStatisticsRepository;
         this.matchStatisticsMapper = matchStatisticsMapper;
         this.footballMatchRepository = footballMatchRepository;
         this.teamRepository = teamRepository;
+        this.standingService = standingService;
     }
 
     public List<MatchStatisticsDTO> findAll() {
@@ -69,9 +72,16 @@ public class MatchStatisticsService {
         statistics.setMatch(match);
         statistics.setTeam(team);
 
-        return matchStatisticsMapper.toDTO(
-                matchStatisticsRepository.save(statistics)
+        MatchStatistics saved =
+                matchStatisticsRepository.save(statistics);
+
+
+        standingService.recalculateStandings(
+                match.getCompetitionSeason().getId()
         );
+
+
+        return matchStatisticsMapper.toDTO(saved);
     }
 
     public MatchStatisticsDTO update(Long id, MatchStatisticsUpdateDTO dto) {
@@ -95,9 +105,18 @@ public class MatchStatisticsService {
         existing.setFouls(dto.getFouls());
 
 
-        return matchStatisticsMapper.toDTO(
-            matchStatisticsRepository.save(existing)
+        MatchStatistics saved =
+                matchStatisticsRepository.save(existing);
+
+
+        standingService.recalculateStandings(
+                existing.getMatch()
+                        .getCompetitionSeason()
+                        .getId()
         );
+
+
+        return matchStatisticsMapper.toDTO(saved);
     }
 
     public void delete(Long id) {
