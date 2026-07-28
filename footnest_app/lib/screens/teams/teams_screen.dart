@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:footnest_app/services/team_service.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
 
 import '/models/team/team.dart';
 import '/services/service_locator.dart';
@@ -21,10 +22,52 @@ class _TeamsScreenState extends State<TeamsScreen> {
   final TeamService teamService = locator();
   late Future<List<Team>> teamsFuture;
 
+  final TextEditingController searchController = TextEditingController();
+  Timer? _debounce;
+
+  List<Team> allTeams = [];
+  List<Team> filteredTeams = [];
+
+  bool searching = false;
+
   @override
   void initState() {
     super.initState();
     teamsFuture = teamService.getTeams();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void onSearchChanged(String value) {
+    _debounce?.cancel();
+    _debounce = Timer(
+      const Duration(milliseconds: 300),
+      () {
+
+        final query = value.toLowerCase().trim();
+
+        setState(() {
+          searching = query.isNotEmpty;
+          if(query.isEmpty) {
+            filteredTeams = allTeams;
+          } else {
+            filteredTeams = allTeams
+                .where(
+                  (team) => team.name
+                      .toLowerCase()
+                      .contains(query),
+                )
+                .toList();
+          }
+        });
+
+      },
+    );
   }
 
   @override
@@ -89,6 +132,11 @@ class _TeamsScreenState extends State<TeamsScreen> {
 
           final teams = snapshot.data ?? [];
 
+          if(allTeams.isEmpty) {
+            allTeams = teams;
+            filteredTeams = teams;
+          }
+
           if(teams.isEmpty) {
             return const Center(
               child: Text(
@@ -102,6 +150,37 @@ class _TeamsScreenState extends State<TeamsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
+                TextField(
+                  controller: searchController,
+                  onChanged: onSearchChanged,
+                  decoration: InputDecoration(
+                    hintText: "Cerca squadra",
+                    prefixIcon: const Icon(
+                      Icons.search,
+                    ),
+                    suffixIcon: searching
+                        ? IconButton(
+                            icon: const Icon(
+                              Icons.close,
+                            ),
+                            onPressed: () {
+                              searchController.clear();
+                              setState(() {
+                                searching = false;
+                                filteredTeams = allTeams;
+                              });
+                            },
+                          )
+                        : null,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
                 Text(
                   "${teams.length} squadre",
                   style: Theme.of(context)
@@ -113,12 +192,13 @@ class _TeamsScreenState extends State<TeamsScreen> {
 
                 Expanded(
                   child: ListView.builder(
-                    itemCount: teams.length,
+                    itemCount: filteredTeams.length,
                     itemBuilder: (context,index) {
+                      final team = filteredTeams[index];
                       return TeamCard(
-                        team: teams[index],
+                        team: team,
                         onTap: () {
-                          context.push('${AppRoutes.teams}/${teams[index].id}');
+                          context.push('${AppRoutes.teams}/${team.id}');
                         },
                       );
                     },
