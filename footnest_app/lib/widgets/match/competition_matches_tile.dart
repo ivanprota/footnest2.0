@@ -7,10 +7,12 @@ import 'match_row.dart';
 class CompetitionMatchesTile extends StatefulWidget {
 
   final CompetitionMatches competition;
+  final VoidCallback onRefresh;
 
   const CompetitionMatchesTile({
     super.key,
     required this.competition,
+    required this.onRefresh,
   });
 
   @override
@@ -131,6 +133,7 @@ class _CompetitionMatchesTileState extends State<CompetitionMatchesTile> {
                             .map(
                               (match) => MatchRow(
                                 match: match,
+                                onRefresh: widget.onRefresh,
                               ),
                             )
                             .toList(),

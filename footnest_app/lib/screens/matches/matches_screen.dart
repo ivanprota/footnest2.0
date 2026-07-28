@@ -162,6 +162,7 @@ class _MatchesScreenState extends State<MatchesScreen> {
                               final competition = competitions[index];
                               return CompetitionMatchesTile(
                                 competition: competition,
+                                onRefresh: loadMatches,
                               );
                             },
                           ),

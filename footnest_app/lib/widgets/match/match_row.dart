@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 
 import '/models/match/match_summary.dart';
 import '/config/api_config.dart';
+import '/screens/matches/match_detail_screen.dart';
 
 class MatchRow extends StatefulWidget {
 
   final MatchSummary match;
+  final VoidCallback onRefresh;
 
   const MatchRow({
     super.key,
     required this.match,
+    required this.onRefresh,
   });
 
   @override
@@ -44,8 +47,19 @@ class _MatchRowState extends State<MatchRow> {
         });
       },
       child: InkWell(
-        onTap: () {
-          // dettaglio match futuro
+        onTap: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => MatchDetailScreen(
+                matchId: widget.match.id,
+              ),
+            ),
+          );
+
+          if(result == true) {
+            widget.onRefresh();
+          }
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds:150),

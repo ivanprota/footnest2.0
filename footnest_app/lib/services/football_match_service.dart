@@ -1,4 +1,5 @@
 import '/models/match/competition_matches.dart';
+import '/models/match/match_detail.dart';
 import '/services/api_client.dart';
 
 class FootballMatchService {
@@ -26,6 +27,38 @@ class FootballMatchService {
           (json) => CompetitionMatches.fromJson(json),
         )
         .toList();
+  }
+
+  Future<MatchDetail> getMatchDetail(int id) async {
+    final response = await apiClient.get(
+      "/football-matches/$id/details",
+    );
+    
+    return MatchDetail.fromJson(response);
+  }
+
+  Future<MatchDetail> updateMatch(int id, Map<String,dynamic> body,) async {
+    final response =
+        await apiClient.put(
+          "/football-matches/$id",
+          body,
+        );
+
+    return MatchDetail.fromJson(response);
+  }
+
+  Future<void> createStatistics(Map<String, dynamic> body) async {
+    await apiClient.post(
+      "/matches-statistics",
+      body,
+    );
+  }
+
+  Future<void> updateStatistics(int id, Map<String, dynamic> body) async {
+    await apiClient.put(
+      "/matches-statistics/$id",
+      body,
+    );
   }
 
 }

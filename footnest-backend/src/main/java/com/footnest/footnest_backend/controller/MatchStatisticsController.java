@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.footnest.footnest_backend.entity.MatchStatistics;
+import com.footnest.footnest_backend.dto.matchstatistics.MatchStatisticsCreateDTO;
+import com.footnest.footnest_backend.dto.matchstatistics.MatchStatisticsDTO;
+import com.footnest.footnest_backend.dto.matchstatistics.MatchStatisticsUpdateDTO;
 import com.footnest.footnest_backend.service.MatchStatisticsService;
 
 @RestController
@@ -27,23 +29,23 @@ public class MatchStatisticsController {
     }
 
     @GetMapping
-    public List<MatchStatistics> getAll() {
+    public List<MatchStatisticsDTO> getAll() {
         return matchStatisticsService.findAll();
     }
 
     @GetMapping("/{id}")
-    public MatchStatistics getById(@PathVariable Long id) {
+    public MatchStatisticsDTO getById(@PathVariable Long id) {
         return matchStatisticsService.findById(id);
     }
 
     @PostMapping
-    public MatchStatistics create(@RequestBody MatchStatistics matchStatistics) {
-        return matchStatisticsService.save(matchStatistics);
+    public MatchStatisticsDTO create(@RequestBody MatchStatisticsCreateDTO dto) {
+        return matchStatisticsService.create(dto);
     }
 
     @PutMapping("/{id}")
-    public MatchStatistics update(@PathVariable Long id, @RequestBody MatchStatistics matchStatistics) {
-        return matchStatisticsService.update(id, matchStatistics);
+    public MatchStatisticsDTO update(@PathVariable Long id, @RequestBody MatchStatisticsUpdateDTO dto) {
+        return matchStatisticsService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
