@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 
 import '/models/match/match_summary.dart';
 
+import 'package:go_router/go_router.dart';
+import '/routes/routes.dart';
+
 class MatchSummaryCard extends StatelessWidget {
 
   final MatchSummary match;
@@ -14,70 +17,75 @@ class MatchSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () {
+        context.push('${AppRoutes.matches}/${match.id}');
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            children: [
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
 
-                _team(
-                  match.homeTeam,
-                  match.homeLogo,
-                ),
+                  _team(
+                    match.homeTeam,
+                    match.homeLogo,
+                  ),
 
-                Column(
-                  children: [
+                  Column(
+                    children: [
 
-                    if(match.status == "PLAYED")
-                      Text(
-                        "${match.homeGoals ?? '-'}"
-                        " - "
-                        "${match.awayGoals ?? '-'}",
-                        style: const TextStyle(
-                          fontSize:22,
-                          fontWeight:
-                              FontWeight.bold,
+                      if(match.status == "PLAYED")
+                        Text(
+                          "${match.homeGoals ?? '-'}"
+                          " - "
+                          "${match.awayGoals ?? '-'}",
+                          style: const TextStyle(
+                            fontSize:22,
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
+                        )
+                      else
+                        const Text(
+                          "VS",
+                          style: TextStyle(
+                            fontWeight:
+                                FontWeight.bold,
+                          ),
                         ),
-                      )
-                    else
-                      const Text(
-                        "VS",
-                        style: TextStyle(
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
 
-                  ],
-                ),
+                    ],
+                  ),
 
-                _team(
-                  match.awayTeam,
-                  match.awayLogo,
-                ),
+                  _team(
+                    match.awayTeam,
+                    match.awayLogo,
+                  ),
 
-              ],
-            ),
-
-            const SizedBox(height:10),
-
-            Text(
-              DateFormat("dd-MM-yyyy").format(match.date),
-              style: TextStyle(
-                color:
-                    Colors.grey[600],
+                ],
               ),
-            )
 
-          ],
+              const SizedBox(height:10),
+
+              Text(
+                DateFormat("dd-MM-yyyy").format(match.date),
+                style: TextStyle(
+                  color:
+                      Colors.grey[600],
+                ),
+              )
+
+            ],
+          ),
         ),
-      ),
+      )
     );
-
   }
 
   Widget _team(String name, String logo){

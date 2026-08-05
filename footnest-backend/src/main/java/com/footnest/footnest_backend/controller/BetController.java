@@ -1,25 +1,20 @@
 package com.footnest.footnest_backend.controller;
 
+import com.footnest.footnest_backend.dto.bet.BetDTO;
+import com.footnest.footnest_backend.dto.bet.CreateBetRequest;
+import com.footnest.footnest_backend.service.BetService;
+
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.footnest.footnest_backend.entity.Bet;
-import com.footnest.footnest_backend.service.BetService;
 
 @RestController
 @RequestMapping("/bets")
 @CrossOrigin
 public class BetController {
-    
+
     private final BetService betService;
 
     public BetController(BetService betService) {
@@ -27,28 +22,12 @@ public class BetController {
     }
 
     @GetMapping
-    public List<Bet> getAll() {
-        return betService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Bet getById(@PathVariable Long id) {
-        return betService.findById(id);
+    public List<BetDTO> getMyBets(Authentication authentication){
+        return betService.findAll(authentication.getName());
     }
 
     @PostMapping
-    public Bet create(@RequestBody Bet bet) {
-        return betService.save(bet);
+    public BetDTO create(Authentication authentication, @RequestBody CreateBetRequest request){
+        return betService.create(authentication.getName(), request);
     }
-
-    @PutMapping("/{id}")
-    public Bet update(@PathVariable Long id, @RequestBody Bet bet) {
-        return betService.update(id, bet);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        betService.delete(id);
-    }
-
 }

@@ -4,12 +4,23 @@ import '/screens/home/home_screen.dart';
 import '/screens/teams/team_details_screen.dart';
 import '/screens/teams/add_team_screen.dart';
 import '/screens/competitions/competition_details_screen.dart';
+import '/screens/matches/match_detail_screen.dart';
+import '/screens/auth/login_screen.dart';
+import '/screens/auth/register_screen.dart';
+import '/screens/profile/profile_screen.dart';
+import '/screens/auth/auth_gate.dart';
 import 'routes.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.home,
+  initialLocation: AppRoutes.auth,
 
   routes: [
+
+    GoRoute(
+      path: AppRoutes.auth,
+      builder: (context,state) =>
+          const AuthGate(),
+    ),
 
     GoRoute(
       path: AppRoutes.home,
@@ -45,6 +56,38 @@ final GoRouter appRouter = GoRouter(
         );
       },
     ),
+
+    GoRoute(
+      path: AppRoutes.matchDetails,
+      builder: (context, state) {
+
+        final id = int.parse(
+          state.pathParameters['id']!,
+        );
+
+        return MatchDetailScreen(
+          matchId: id,
+        );
+      },
+    ),
+
+    GoRoute(
+      path: AppRoutes.login,
+      builder: (context, state) =>
+          const LoginScreen(),
+    ),
+
+    GoRoute(
+      path: AppRoutes.register,
+      builder: (context, state) =>
+          const RegisterScreen(),
+    ),
+
+    GoRoute(
+      path: AppRoutes.profile,
+      builder: (context, state) =>
+          const ProfileScreen(),
+    ),    
 
   ],
 );

@@ -33,7 +33,11 @@ public class Bet {
     private LocalDateTime createdAt = LocalDateTime.now();
 
 
-    @OneToMany(mappedBy = "bet")
+    @OneToMany(
+        mappedBy = "bet",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
     private List<BetSelection> selections = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

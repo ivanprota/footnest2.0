@@ -25,7 +25,9 @@ class _MatchRowState extends State<MatchRow> {
   bool hovering = false;
 
   String logoUrl(String path) {
-    return "${ApiConfig.baseUrl}/$path";
+    if (path.startsWith("http")) return path;
+
+    return "${ApiConfig.baseUrl}/uploads/$path";
   }
 
   bool get finished =>
