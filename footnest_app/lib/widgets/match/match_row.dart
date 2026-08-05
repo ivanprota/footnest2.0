@@ -49,6 +49,7 @@ class _MatchRowState extends State<MatchRow> {
         });
       },
       child: InkWell(
+        mouseCursor: SystemMouseCursors.click,
         onTap: () async {
           final result = await Navigator.push(
             context,

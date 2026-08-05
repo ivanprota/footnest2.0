@@ -48,6 +48,7 @@ class _CompetitionMatchesTileState extends State<CompetitionMatchesTile> {
         children: [
 
           InkWell(
+            mouseCursor: SystemMouseCursors.click,
             borderRadius: BorderRadius.circular(16),
             onTap: () {
               setState(() {

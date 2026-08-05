@@ -304,6 +304,10 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
           actions:[
 
             IconButton(
+              mouseCursor: SystemMouseCursors.click,
+              tooltip: editing
+                ? "Annulla modifiche"
+                : "Modifica partita",
               icon: Icon(
                 editing
                 ? Icons.close
@@ -315,16 +319,6 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
           ],
 
         ),
-
-        floatingActionButton:
-            !editing
-            ?
-            FloatingActionButton.extended(
-              onPressed: toggleEditing,
-              icon: const Icon(Icons.edit),
-              label: const Text("Modifica"),
-            )
-            : null,
         body: loading
           ?
           const Center(
@@ -415,42 +409,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
               child: SizedBox(
                 width: double.infinity,
                 height: 55,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
-                    elevation: 6,
-                    shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                  ),
-                  icon:
-                    saving
-                    ?
-                    const SizedBox(
-                      width:22,
-                      height:22,
-                      child: CircularProgressIndicator(
-                        strokeWidth:2.5,
-                        color:Colors.white,
-                      ),
-                    )
-                    :
-                    const Icon(
-                      Icons.save_rounded, 
-                      size:26
-                    ),
-                  label:
-                    Text(
-                      saving
-                      ? "Salvataggio..."
-                      : "Salva modifiche",
-                      style: const TextStyle(
-                        fontSize:17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                child: _HoverSaveButton(
+                  saving: saving,
                   onPressed: saving ? null : saveAll,
                 ),
               ),
@@ -498,5 +458,112 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
       });
     }
   }
+}
 
+class _HoverSaveButton extends StatefulWidget {
+
+  final bool saving;
+  final VoidCallback? onPressed;
+
+  const _HoverSaveButton({
+    required this.saving,
+    required this.onPressed,
+  });
+
+  @override
+  State<_HoverSaveButton> createState() =>
+      _HoverSaveButtonState();
+
+}
+
+
+class _HoverSaveButtonState extends State<_HoverSaveButton> {
+
+  bool hovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: widget.onPressed != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
+      onEnter: (_) {
+        if(widget.onPressed != null) {
+          setState(() {
+            hovering = true;
+          });
+        }
+      },
+      onExit: (_) {
+        setState(() {
+          hovering = false;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds:180),
+        transform: hovering
+            ? Matrix4.translationValues(0, -3, 0)
+            : Matrix4.identity(),
+        child: ElevatedButton.icon(
+          style: ButtonStyle(
+            mouseCursor: WidgetStateProperty.all(
+              SystemMouseCursors.click,
+            ),
+            backgroundColor: WidgetStateProperty.all(
+              Theme.of(context).colorScheme.primary,
+            ),
+            foregroundColor: WidgetStateProperty.all(
+              Colors.white,
+            ),
+            elevation: WidgetStateProperty.resolveWith(
+              (states) {
+                if(states.contains(WidgetState.hovered)) {
+                  return 12;
+                }
+                return 6;
+              },
+            ),
+            shadowColor: WidgetStateProperty.all(
+              Theme.of(context)
+                  .colorScheme
+                  .primary
+                  .withOpacity(0.5),
+            ),
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18),
+              ),
+            ),
+          ),
+          icon:
+              widget.saving
+              ? const SizedBox(
+                  width:22,
+                  height:22,
+                  child: CircularProgressIndicator(
+                    strokeWidth:2.5,
+                    color:Colors.white,
+                  ),
+                )
+              : const Icon(
+                  Icons.save_rounded,
+                  size:26,
+                ),
+          label:
+              Text(
+                widget.saving
+                ? "Salvataggio..."
+                : "Salva modifiche",
+                style:
+                    const TextStyle(
+                      fontSize:17,
+                      fontWeight:
+                          FontWeight.bold,
+                    ),
+              ),
+          onPressed: widget.onPressed,
+        ),
+      ),
+    );
+  }
 }

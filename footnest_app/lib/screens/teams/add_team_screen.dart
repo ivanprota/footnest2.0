@@ -261,6 +261,32 @@ class _AddTeamScreenState extends State<AddTeamScreen> {
                         const SizedBox(height: 18),
 
                         FilledButton.icon(
+                          style: ButtonStyle(
+                            mouseCursor: MaterialStateProperty.all(
+                              SystemMouseCursors.click,
+                            ),
+                            elevation: MaterialStateProperty.resolveWith<double>(
+                              (states) {
+                                if (states.contains(MaterialState.hovered)) {
+                                  return 8;
+                                }
+                                return 2;
+                              },
+                            ),
+                            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                              (states) {
+                                if (states.contains(MaterialState.hovered)) {
+                                  return Theme.of(context)
+                                      .colorScheme
+                                      .primary
+                                      .withOpacity(0.85);
+                                }
+                                return Theme.of(context)
+                                    .colorScheme
+                                    .primary;
+                              },
+                            ),
+                          ),
                           onPressed: pickLogo,
                           icon: const Icon(Icons.upload),
                           label: Text(
@@ -309,6 +335,38 @@ class _AddTeamScreenState extends State<AddTeamScreen> {
                   SizedBox(
                     height: 52,
                     child: FilledButton(
+                      style: ButtonStyle(
+                        mouseCursor: MaterialStateProperty.all(SystemMouseCursors.click),
+                        elevation: MaterialStateProperty.resolveWith<double>(
+                          (states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return 8;
+                            }
+                            return 2;
+                          },
+                        ),
+                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.85);
+                            }
+                            return Theme.of(context)
+                                .colorScheme
+                                .primary;
+                          },
+                        ),
+                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                          (states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return Colors.white.withOpacity(0.08);
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                       onPressed: saving ? null : saveTeam,
                       child: saving
                           ? const SizedBox(

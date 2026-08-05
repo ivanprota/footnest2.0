@@ -79,6 +79,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
         ),
         actions: [
           IconButton(
+            mouseCursor: SystemMouseCursors.click,
             icon: const Icon(Icons.add),
             tooltip: "Aggiungi squadra",
             onPressed: () async {

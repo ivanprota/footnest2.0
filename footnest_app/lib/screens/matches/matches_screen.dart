@@ -28,30 +28,46 @@ class _MatchesScreenState extends State<MatchesScreen> {
     loadMatches();
   }
 
-  Future<void> loadMatches() async {
+  Future loadMatches() async {
     setState(() {
       loading = true;
     });
 
     try {
-
       final result = await matchService.getMatchesByDate(selectedDate);
+      for (final competition in result) {
+        competition.matches.sort((a, b) {
+
+          final timeA = a.kickoffTime;
+          final timeB = b.kickoffTime;
+
+          if (timeA == null && timeB == null) {
+            return 0;
+          }
+
+          if (timeA == null) {
+            return 1;
+          }
+
+          if (timeB == null) {
+            return -1;
+          }
+
+          return timeA.compareTo(timeB);
+        });
+      }
 
       setState(() {
         competitions = result;
       });
 
     } catch(e) {
-
       debugPrint(e.toString());
-
     } finally {
-
       setState(() {
         loading = false;
       });
     }
-
   }
 
   @override

@@ -93,19 +93,22 @@ class _MatchTimelineState extends State<MatchTimeline> {
                 ),
 
                 TextButton.icon(
+                  style: ButtonStyle(
+                    mouseCursor: WidgetStateProperty.all(
+                      SystemMouseCursors.click,
+                    ),
+                  ),
                   onPressed: () {
                     widget.onDateSelected(
                       DateTime.now(),
                     );
                   },
-                  icon:
-                      const Icon(
-                        Icons.today,
-                      ),
-                  label:
-                      const Text(
-                        "Oggi",
-                      ),
+                  icon: const Icon(
+                    Icons.today,
+                  ),
+                  label: const Text(
+                    "Oggi",
+                  ),
                 )
 
               ],

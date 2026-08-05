@@ -175,7 +175,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
         vertical:12,
       ),
       decoration: BoxDecoration(
-        color:Theme.of(context).colorScheme.surface,
+        color:Theme.of(context).colorScheme.onPrimary,
         border: Border(
           top: BorderSide(
             color: Theme.of(context).colorScheme.outline,
@@ -215,12 +215,50 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
           ),
 
           TextButton(
+            style: ButtonStyle(
+              mouseCursor: WidgetStateProperty.all(
+                SystemMouseCursors.click,
+              ),
+
+              overlayColor: WidgetStateProperty.resolveWith(
+                (states) {
+                  if (states.contains(WidgetState.hovered)) {
+                    return Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withOpacity(0.18);
+                  }
+
+                  if (states.contains(WidgetState.pressed)) {
+                    return Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withOpacity(0.30);
+                  }
+
+                  return null;
+                },
+              ),
+
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+
             onPressed: openBetSlip,
-            child:const Text("Vedi"),
+
+            child: const Text(
+              "Vedi",
+            ),
           ),
 
           IconButton(
             icon: const Icon(Icons.delete_outline),
+            style: ButtonStyle(
+              mouseCursor: WidgetStateProperty.all(SystemMouseCursors.click)
+            ),
             onPressed: () {
               setState((){
                 betSlip.clear();
@@ -277,6 +315,10 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
 
           Expanded(
             child: ListView.builder(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16
+              ),
               itemCount: competitions.length,
               itemBuilder: (context,index) {
                 final competition =

@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import '/models/match/match_summary.dart';
 import 'match_summary_card.dart';
 
-
 class MatchesSection extends StatelessWidget {
 
   final String title;
   final List<MatchSummary> matches;
-
 
   const MatchesSection({
     super.key,
@@ -16,33 +14,19 @@ class MatchesSection extends StatelessWidget {
     required this.matches,
   });
 
-
   @override
   Widget build(BuildContext context) {
-
     return Card(
-
       elevation: 3,
-
       child: Padding(
-
         padding: const EdgeInsets.all(16),
-
         child: Column(
-
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-
             Row(
-
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
-
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
 
                 Text(
                   title,
@@ -52,7 +36,6 @@ class MatchesSection extends StatelessWidget {
                   ),
                 ),
 
-
                 Text(
                   "${matches.length}",
                   style: TextStyle(
@@ -61,18 +44,13 @@ class MatchesSection extends StatelessWidget {
                   ),
                 ),
 
-
               ],
 
             ),
 
-
             const SizedBox(height: 12),
 
-
-
             matches.isEmpty
-
                 ? const Padding(
                     padding: EdgeInsets.all(20),
                     child: Center(
@@ -81,8 +59,6 @@ class MatchesSection extends StatelessWidget {
                       ),
                     ),
                   )
-
-
                 : Column(
                     children: [
 
@@ -98,15 +74,10 @@ class MatchesSection extends StatelessWidget {
                     ],
                   ),
 
-
           ],
 
         ),
-
       ),
-
     );
-
   }
-
 }

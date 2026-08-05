@@ -57,7 +57,7 @@ class _MatchDayChipState extends State<MatchDayChip> {
         widget.date.day.toString();
 
     return MouseRegion(
-
+      cursor: SystemMouseCursors.click,
       onEnter: (_) {
         setState(() {
           hovering = true;
@@ -75,46 +75,40 @@ class _MatchDayChipState extends State<MatchDayChip> {
         onTap: widget.onTap,
 
         child: AnimatedContainer(
-
           duration:
               const Duration(milliseconds: 180),
-
+          transform: hovering
+            ? Matrix4.translationValues(0, -3, 0)
+            : Matrix4.identity(),
           width: 68,
           height: 82,
-
           margin:
               const EdgeInsets.symmetric(
                 horizontal: 4,
                 vertical: 6,
               ),
-
           decoration: BoxDecoration(
-
             color: widget.selected
                 ? Theme.of(context).colorScheme.primary
                 : hovering
                     ? Theme.of(context).colorScheme.surfaceContainerHighest
                     : Colors.transparent,
-
             borderRadius:
                 BorderRadius.circular(14),
-
             border: Border.all(
               color: widget.selected
                   ? Theme.of(context).colorScheme.primary
                   : Theme.of(context).colorScheme.outline
             ),
-
-            boxShadow: widget.selected
+            boxShadow: (widget.selected || hovering)
                 ? [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.12),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                      blurRadius: hovering ? 10 : 8,
+                      offset: const Offset(0, 3),
                     )
                   ]
                 : [],
-
           ),
 
           child: Column(

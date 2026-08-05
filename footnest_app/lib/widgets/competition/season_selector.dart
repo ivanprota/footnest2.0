@@ -34,6 +34,7 @@ class SeasonSelector extends StatelessWidget {
         const SizedBox(height: 12),
 
         DropdownButton<CompetitionSeason>(
+          mouseCursor: SystemMouseCursors.click,
           isExpanded: true,
           value: selectedSeason,
           items: seasons.map((season) {

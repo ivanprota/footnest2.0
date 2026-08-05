@@ -219,6 +219,7 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                                 color: Colors.green,
                               ),
                               tooltip: "Aggiungi alla schedina",
+                              mouseCursor: SystemMouseCursors.click,
                               onPressed: () {
                                 widget.onAddToBetSlip(p);
                               },
@@ -231,6 +232,7 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                               color: Colors.redAccent,
                             ),
                             tooltip: "Elimina pronostico",
+                            mouseCursor: SystemMouseCursors.click,
                             onPressed: () async {
 
                               final confirm =
@@ -304,6 +306,9 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                        mouseCursor: WidgetStateProperty.all(SystemMouseCursors.click)
+                      ),
                       onPressed: () {
                         setState(() {
                           adding=true;
