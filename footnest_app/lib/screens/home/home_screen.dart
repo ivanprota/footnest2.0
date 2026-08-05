@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../widgets/app_sidebar.dart';
+import '/widgets/app_sidebar.dart';
 import '../teams/teams_screen.dart';
 import '../matches/matches_screen.dart';
 import '../competitions/competitions_screen.dart';
+import '../predictions/predictions_screen.dart';
+import '/services/service_locator.dart';
+import '/services/auth_service.dart';
+import '/routes/routes.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -22,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     TeamsScreen(),
     MatchesScreen(),
     CompetitionsScreen(),
+    PredictionsScreen(),
   ];
 
   @override
@@ -35,6 +41,20 @@ class _HomeScreenState extends State<HomeScreen> {
               setState(() {
                 selectedIndex = index;
               });
+            },
+            onAccountPressed: () async {
+              final logged =
+                  await locator<AuthService>()
+                      .isLogged();
+
+              if(context.mounted) {
+                if(logged) {
+                  context.go(AppRoutes.profile);
+                } 
+                else {
+                  context.go(AppRoutes.login);
+                }
+              }
             },
           ),
 

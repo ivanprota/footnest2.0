@@ -71,38 +71,32 @@ class MatchesSection extends StatelessWidget {
 
 
 
-            Expanded(
+            matches.isEmpty
 
-              child: matches.isEmpty
-
-                  ? const Center(
+                ? const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
                       child: Text(
                         "Nessuna partita disponibile",
                       ),
-                    )
-
-
-                  : ListView.separated(
-
-                      itemCount: matches.length,
-
-                      separatorBuilder: (context,index) =>
-                          const SizedBox(height: 8),
-
-
-                      itemBuilder: (context,index) {
-
-
-                        return MatchSummaryCard(
-                          match: matches[index],
-                        );
-
-
-                      },
-
                     ),
+                  )
 
-            ),
+
+                : Column(
+                    children: [
+
+                      for(final match in matches)
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(bottom:8),
+                          child: MatchSummaryCard(
+                            match: match,
+                          ),
+                        ),
+
+                    ],
+                  ),
 
 
           ],

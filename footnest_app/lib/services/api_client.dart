@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '/config/api_config.dart';
 import 'dart:io';
 
@@ -7,15 +8,32 @@ class ApiClient {
 
   final String baseUrl = ApiConfig.baseUrl;
 
-  final Map<String, String> _headers = {
+  Map<String, String> get headers => {
     "Content-Type": "application/json",
     "Accept": "application/json",
   };
 
+  Future<Map<String,String>> getHeaders() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+
+    final headers = {
+      "Content-Type":"application/json",
+      "Accept":"application/json",
+    };
+
+    if(token != null) {
+      headers["Authorization"] = "Bearer $token";
+    }
+
+    return headers;
+
+  }
+
   Future<dynamic> get(String endpoint) async {
     final response = await http.get(
       Uri.parse('$baseUrl$endpoint'),
-      headers: _headers,
+      headers: await getHeaders(),
     );
 
     return _handleResponse(response);
@@ -27,7 +45,7 @@ class ApiClient {
   ) async {
     final response = await http.post(
       Uri.parse('$baseUrl$endpoint'),
-      headers: _headers,
+      headers: await getHeaders(),
       body: jsonEncode(body),
     );
 
@@ -40,7 +58,7 @@ class ApiClient {
   ) async {
     final response = await http.put(
       Uri.parse('$baseUrl$endpoint'),
-      headers: _headers,
+      headers: await getHeaders(),
       body: jsonEncode(body),
     );
 
@@ -52,7 +70,7 @@ class ApiClient {
   ) async {
     final response = await http.delete(
       Uri.parse('$baseUrl$endpoint'),
-      headers: _headers,
+      headers: await getHeaders(),
     );
 
     return _handleResponse(response);

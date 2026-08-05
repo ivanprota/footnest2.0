@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '/models/match/competition_matches.dart';
-import '/config/api_config.dart';
 import 'match_row.dart';
 
 class CompetitionMatchesTile extends StatefulWidget {
@@ -66,7 +65,7 @@ class _CompetitionMatchesTileState extends State<CompetitionMatchesTile> {
 
                   // LOGO COMPETIZIONE
                   Image.network(
-                    "${ApiConfig.baseUrl}/${widget.competition.competitionLogo}",
+                    widget.competition.competitionLogo,
                     width:32,
                     height:32,
                     loadingBuilder: (context, child, loadingProgress) {

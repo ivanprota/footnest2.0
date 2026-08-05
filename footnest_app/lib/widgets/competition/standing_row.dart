@@ -64,7 +64,7 @@ class _StandingRowState extends State<StandingRow> {
               children: [
 
                 SizedBox(
-                  width: 35,
+                  width: 30,
                   child: Text(
                     "${widget.standing.position}",
                   ),
@@ -98,7 +98,7 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 40,
+                  width: 35,
                   child: Text(
                     "${widget.standing.played}",
                     textAlign: TextAlign.center,
@@ -106,7 +106,7 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 40,
+                  width: 35,
                   child: Text(
                     "${widget.standing.wins}",
                     textAlign: TextAlign.center,
@@ -114,7 +114,7 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 40,
+                  width: 35,
                   child: Text(
                     "${widget.standing.draws}",
                     textAlign: TextAlign.center,
@@ -122,7 +122,7 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 40,
+                  width: 35,
                   child: Text(
                     "${widget.standing.losses}",
                     textAlign: TextAlign.center,
@@ -130,7 +130,7 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 45,
+                  width: 40,
                   child: Text(
                     "${widget.standing.goalsFor}",
                     textAlign: TextAlign.center,
@@ -138,7 +138,7 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 45,
+                  width: 40,
                   child: Text(
                     "${widget.standing.goalsAgainst}",
                     textAlign: TextAlign.center,
@@ -146,7 +146,7 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 45,
+                  width: 40,
                   child: Text(
                     "${widget.standing.points}",
                     textAlign: TextAlign.center,

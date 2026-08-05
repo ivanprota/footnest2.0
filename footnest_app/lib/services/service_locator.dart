@@ -8,6 +8,10 @@ import '/services/standing_service.dart';
 import '/services/competition_season_service.dart';
 import '/services/upload_service.dart';
 import '/services/football_match_service.dart';
+import '/services/auth_service.dart';
+import '/services/auth_state_service.dart';
+import '/services/prediction_service.dart';
+import '/services/bet_service.dart';
 
 
 final locator = GetIt.instance;
@@ -59,6 +63,30 @@ void setupLocator() {
 
   locator.registerLazySingleton<FootballMatchService>(
     () => FootballMatchService(
+      locator<ApiClient>(),
+    ),
+  );
+
+  locator.registerLazySingleton<AuthService>(
+    () => AuthService(
+      apiClient: locator<ApiClient>(),
+    ),
+  );
+
+  locator.registerLazySingleton<AuthStateService>(
+    () => AuthStateService(
+      authService: locator<AuthService>(),
+    ),
+  );
+
+  locator.registerLazySingleton<PredictionService>(
+    () => PredictionService(
+      locator<ApiClient>(),
+    ),
+  );
+
+  locator.registerLazySingleton(
+    () => BetService(
       locator<ApiClient>(),
     ),
   );

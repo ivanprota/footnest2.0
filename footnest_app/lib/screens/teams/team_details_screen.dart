@@ -4,7 +4,6 @@ import '/services/team_details_service.dart';
 import '/services/service_locator.dart';
 
 import '/widgets/team_details/matches_section.dart';
-import '/widgets/team_details/standing_card.dart';
 import '/widgets/team_details/team_header_card.dart';
 
 class TeamDetailsScreen extends StatefulWidget {
@@ -76,49 +75,22 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
                   children: [
 
                     Expanded(
-                      flex: 1,
-                      child: team.standing != null
-                          ? StandingCard(standing: team.standing!)
-                          : const Card(
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Text("Classifica non disponibile"),
-                              ),
-                            ),
+                      child: MatchesSection(
+                        title: "Ultime partite",
+                        matches: team.lastMatches.take(10).toList(),
+                      ),
                     ),
 
                     const SizedBox(width: 24),
 
                     Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-
-                          SizedBox(
-                            height: 320,
-                            child: MatchesSection(
-                              title: "Ultime partite",
-                              matches: team.lastMatches,
-                            ),
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          SizedBox(
-                            height: 320,
-                            child: MatchesSection(
-                              title: "Prossime partite",
-                              matches: team.nextMatches,
-                            ),
-                          ),
-
-                        ],
-
+                      child: MatchesSection(
+                        title: "Prossime partite",
+                        matches: team.nextMatches.take(10).toList(),
                       ),
                     ),
 
                   ],
-
                 ),
 
               ],

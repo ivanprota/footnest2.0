@@ -16,7 +16,11 @@ class TeamLogoBox extends StatelessWidget {
 
 
   String logoUrl(String path) {
-    return "${ApiConfig.baseUrl}/$path";
+    if(path.startsWith("http")) {
+      return path;
+    }
+
+    return "${ApiConfig.baseUrl}/uploads/$path";
   }
 
 

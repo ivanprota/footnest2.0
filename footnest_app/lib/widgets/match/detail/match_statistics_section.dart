@@ -373,7 +373,7 @@ class MatchStatisticsSectionState extends State<MatchStatisticsSection> {
         const SizedBox(height:8),
 
         Image.network(
-          "${ApiConfig.baseUrl}/$logo",
+          "${ApiConfig.baseUrl}/uploads/$logo",
           width:45,
           height:45,
           errorBuilder:
