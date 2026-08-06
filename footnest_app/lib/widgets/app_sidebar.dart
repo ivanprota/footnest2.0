@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '/services/service_locator.dart';
-import '/services/auth_state_service.dart';
-
 class AppSidebar extends StatelessWidget {
 
   final int selectedIndex;
   final Function(int) onItemSelected;
-  final VoidCallback onAccountPressed;
 
   const AppSidebar({
     super.key,
     required this.selectedIndex,
     required this.onItemSelected,
-    required this.onAccountPressed
   });
 
   @override
@@ -25,47 +20,6 @@ class AppSidebar extends StatelessWidget {
         onDestinationSelected: onItemSelected,
         extended: true,
         minWidth: 80,
-        trailing: Expanded(
-          child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: Builder(
-                  builder: (context) {
-                    final auth = locator<AuthStateService>();
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(12),
-                      onTap: onAccountPressed,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-
-                            const CircleAvatar(
-                              radius: 18,
-                              child: Icon(
-                                Icons.person,
-                                size: 20,
-                              ),
-                            ),
-
-                            const SizedBox(width: 12),
-
-                            Text(
-                              auth.username ?? "Account",
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-        ),
         leading: Column(
           children: [
             Icon(
@@ -133,6 +87,10 @@ class AppSidebar extends StatelessWidget {
             label: Text(
               "Pronostici",
             ),
+          ),
+          NavigationRailDestination(
+            icon: Icon(Icons.person),
+            label: Text("Profilo"),
           ),
         ],
       ),

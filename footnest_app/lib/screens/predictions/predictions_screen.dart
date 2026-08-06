@@ -25,7 +25,10 @@ class PredictionsScreen extends StatefulWidget {
 
 }
 
-class _PredictionsScreenState extends State<PredictionsScreen> {
+class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true; 
 
   final footballMatchService =
       locator<FootballMatchService>();
@@ -274,6 +277,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: const Row(

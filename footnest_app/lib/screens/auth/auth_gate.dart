@@ -31,7 +31,7 @@ class _AuthGateState extends State<AuthGate> {
     if(!mounted) return;
 
     if(logged) {
-      context.go(AppRoutes.home);
+      context.go(AppRoutes.teams);
     }
     else {
       context.go(AppRoutes.login);

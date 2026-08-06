@@ -17,7 +17,10 @@ class TeamsScreen extends StatefulWidget {
 
 }
 
-class _TeamsScreenState extends State<TeamsScreen> {
+class _TeamsScreenState extends State<TeamsScreen> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   final TeamService teamService = locator();
   late Future<List<Team>> teamsFuture;
@@ -72,6 +75,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(

@@ -1,93 +1,206 @@
+import 'package:footnest_app/services/auth_service.dart';
+import 'package:footnest_app/services/service_locator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/material.dart';
 
-import '/screens/home/home_screen.dart';
+import '/screens/shell/app_shell.dart';
+
+import '/screens/teams/teams_screen.dart';
 import '/screens/teams/team_details_screen.dart';
 import '/screens/teams/add_team_screen.dart';
-import '/screens/competitions/competition_details_screen.dart';
+
+import '/screens/matches/matches_screen.dart';
 import '/screens/matches/match_detail_screen.dart';
+
+import '/screens/competitions/competitions_screen.dart';
+import '/screens/competitions/competition_details_screen.dart';
+
+import '/screens/predictions/predictions_screen.dart';
+
 import '/screens/auth/login_screen.dart';
 import '/screens/auth/register_screen.dart';
+
 import '/screens/profile/profile_screen.dart';
-import '/screens/auth/auth_gate.dart';
+
 import 'routes.dart';
 
+final GlobalKey<NavigatorState> rootNavigatorKey =
+    GlobalKey<NavigatorState>();
+
 final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.auth,
+
+  initialLocation: AppRoutes.login,
+
+  redirect: (context, state) async {
+    final logged = await locator<AuthService>().isLogged();
+    final isLogin = state.matchedLocation == AppRoutes.login;
+    final isRegister = state.matchedLocation == AppRoutes.register;
+
+    if (!logged) {
+      if (isLogin || isRegister) {
+        return null;
+      }
+
+      return AppRoutes.login;
+    }
+
+    if (logged && (isLogin || isRegister)) {
+      return AppRoutes.teams;
+    }
+
+    return null;
+  },
 
   routes: [
 
-    GoRoute(
-      path: AppRoutes.auth,
-      builder: (context,state) =>
-          const AuthGate(),
-    ),
-
-    GoRoute(
-      path: AppRoutes.home,
-      builder: (context, state) => const HomeScreen(),
-    ),
-
-    GoRoute(
-      path: AppRoutes.addTeam,
-      builder: (context,state) =>
-          const AddTeamScreen(),
-    ),
-
-    GoRoute(
-      path: '${AppRoutes.teams}/:id',
-      builder: (context, state) {
-        final id = int.parse(
-          state.pathParameters['id']!,
-        );
-        return TeamDetailsScreen(
-          teamId: id,
-        );
-      },
-    ),
-
-    GoRoute(
-      path: '${AppRoutes.competitions}/:id',
-      builder: (context, state) {
-        final id = int.parse(
-          state.pathParameters['id']!,
-        );
-        return CompetitionDetailsScreen(
-          competitionId: id,
-        );
-      },
-    ),
-
-    GoRoute(
-      path: AppRoutes.matchDetails,
-      builder: (context, state) {
-
-        final id = int.parse(
-          state.pathParameters['id']!,
-        );
-
-        return MatchDetailScreen(
-          matchId: id,
-        );
-      },
-    ),
+    // AUTH
 
     GoRoute(
       path: AppRoutes.login,
-      builder: (context, state) =>
-          const LoginScreen(),
+      builder: (_,__) => const LoginScreen(),
     ),
 
     GoRoute(
       path: AppRoutes.register,
-      builder: (context, state) =>
-          const RegisterScreen(),
+      builder: (_,__) => const RegisterScreen(),
     ),
 
+
     GoRoute(
-      path: AppRoutes.profile,
-      builder: (context, state) =>
-          const ProfileScreen(),
-    ),    
+      path: '/',
+      redirect: (_,__) =>
+          AppRoutes.teams,
+    ),
+
+
+    // APP CON SIDEBAR
+
+    StatefulShellRoute.indexedStack(
+
+      builder: (
+        context,
+        state,
+        navigationShell,
+      ){
+
+        return AppShell(
+          navigationShell: navigationShell,
+        );
+
+      },
+
+      branches: [
+
+        // TEAMS
+        StatefulShellBranch(
+          routes: [
+
+            GoRoute(
+              path: AppRoutes.teams,
+              builder: (_,__) => const TeamsScreen(),
+              routes: [
+
+                GoRoute(
+                  path: 'add',
+                  builder: (_,__) =>const AddTeamScreen(),
+                ),
+
+                GoRoute(
+                  path: ':id',
+                  builder: (context,state) {
+                    return TeamDetailsScreen(
+                      teamId: int.parse(
+                        state.pathParameters['id']!,
+                      ),
+                    );
+                  },
+                ),
+
+              ],
+            ),
+          ],
+        ),
+
+        // MATCHES
+        StatefulShellBranch(
+          routes: [
+
+            GoRoute(
+              path: AppRoutes.matches,
+              builder: (_,__) => const MatchesScreen(),
+              routes: [
+
+                GoRoute(
+                  path: ':id',
+                  builder: (context,state) {
+                    return MatchDetailScreen(
+                      matchId: int.parse(
+                        state.pathParameters['id']!,
+                      ),
+                    );
+                  },
+                ),
+
+              ],
+            ),
+          ],
+        ),
+
+        // COMPETITIONS
+        StatefulShellBranch(
+          routes: [
+
+            GoRoute(
+              path: AppRoutes.competitions,
+              builder: (_,__) => const CompetitionsScreen(),
+              routes: [
+
+                GoRoute(
+                  path: ':id',
+                  builder: (context,state) {
+                    return CompetitionDetailsScreen(
+                      competitionId: int.parse(
+                        state.pathParameters['id']!,
+                      ),
+                    );
+                  },
+                ),
+
+              ],
+            ),
+          ],
+        ),
+
+        // PREDICTIONS
+        StatefulShellBranch(
+          routes: [
+
+            GoRoute(
+              path: AppRoutes.predictions,
+              builder: (_,__) => const PredictionsScreen(),
+            ),
+
+          ],
+        ),
+
+        // -----------------
+        // PROFILE
+        // -----------------
+
+        StatefulShellBranch(
+          routes: [
+
+            GoRoute(
+              path: AppRoutes.profile,
+              builder: (_,__) => const ProfileScreen(),
+            ),
+
+          ],
+        ),
+
+      ],
+    ),
 
   ],
+
 );

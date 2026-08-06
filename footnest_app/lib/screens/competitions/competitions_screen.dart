@@ -16,7 +16,10 @@ class CompetitionsScreen extends StatefulWidget {
 
 }
 
-class _CompetitionsScreenState extends State<CompetitionsScreen> {
+class _CompetitionsScreenState extends State<CompetitionsScreen> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   final CompetitionService competitionService = locator<CompetitionService>();
   late Future<List<Competition>> competitionsFuture;
@@ -29,6 +32,7 @@ class _CompetitionsScreenState extends State<CompetitionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder<List<Competition>>(
       future: competitionsFuture,
       builder: (context, snapshot) {

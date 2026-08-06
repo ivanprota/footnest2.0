@@ -2,8 +2,6 @@ abstract final class AppRoutes {
 
   static const home = '/';
 
-  static const auth = '/auth';
-
   static const login = '/login';
 
   static const register = '/register';
@@ -17,11 +15,10 @@ abstract final class AppRoutes {
 
   static const matches = '/matches';
 
+  static const predictions = '/predictions';
 
-  static const competitionDetails = '/competitions/:id';
 
   static const addTeam = "/teams/add";
 
-  static const matchDetails = '/matches/:id';
 
 }
