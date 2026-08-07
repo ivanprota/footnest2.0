@@ -3,32 +3,21 @@ import 'match_statistics.dart';
 class MatchDetail {
 
   final int id;
-
   final int homeTeamId;
   final int awayTeamId;
-
   final String homeTeam;
   final String awayTeam;
-
   final String homeLogo;
   final String awayLogo;
-
   final DateTime date;
-
   final String? kickoffTime;
-
   final int? homeGoals;
   final int? awayGoals;
-
   final int matchday;
-
   final String status;
-
   final String competition;
   final String season;
-
   final List<MatchStatistics> statistics;
-
 
   MatchDetail({
     required this.id,
@@ -75,7 +64,6 @@ class MatchDetail {
   }
 
   MatchDetail copyWith({
-
     DateTime? date,
     String? kickoffTime,
     int? homeGoals,
@@ -83,49 +71,25 @@ class MatchDetail {
     int? homeTeamId,
     int? awayTeamId,
     String? status,
-
   }) {
 
     return MatchDetail(
-
       id: id,
-
       homeTeam: homeTeam,
       awayTeam: awayTeam,
-
       homeLogo: homeLogo,
       awayLogo: awayLogo,
-
       date: date ?? this.date,
-
-      kickoffTime:
-          kickoffTime ?? this.kickoffTime,
-
-      homeGoals:
-          homeGoals ?? this.homeGoals,
-
-      awayGoals:
-          awayGoals ?? this.awayGoals,
-
+      kickoffTime: kickoffTime ?? this.kickoffTime,
+      homeGoals: homeGoals ?? this.homeGoals,
+      awayGoals: awayGoals ?? this.awayGoals,
       homeTeamId: homeTeamId ?? this.homeTeamId,
-
       awayTeamId: awayTeamId ?? this.awayTeamId,
-
-      matchday:
-          matchday,
-
-      status:
-          status ?? this.status,
-
-      competition:
-          competition,
-
-      season:
-          season,
-
-      statistics:
-          statistics,
-
+      matchday: matchday,
+      status: status ?? this.status,
+      competition: competition,
+      season: season,
+      statistics: statistics,
     );
 
   }

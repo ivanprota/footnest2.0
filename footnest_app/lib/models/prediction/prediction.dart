@@ -14,10 +14,7 @@ class Prediction {
   final bool won;
   final String competitionLogo;
 
-
-
   Prediction({
-
     required this.id,
     required this.matchId,
     required this.homeTeam,
@@ -31,12 +28,9 @@ class Prediction {
     required this.settled,
     required this.won,
     required this.competitionLogo,
-
   });
 
-
-
-  factory Prediction.fromJson(Map<String,dynamic> json){
+  factory Prediction.fromJson(Map<String,dynamic> json) {
     return Prediction(
       id: json['id'],
       matchId: json['matchId'],

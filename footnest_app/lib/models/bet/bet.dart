@@ -3,15 +3,10 @@ import 'bet_selection.dart';
 class Bet {
 
   final int id;
-
   final String name;
-
   final DateTime createdAt;
-
   final String status;
-
   final List<BetSelection> selections;
-
 
   Bet({
     required this.id,

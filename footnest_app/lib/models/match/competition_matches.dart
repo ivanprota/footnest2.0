@@ -1,6 +1,5 @@
 import 'match_summary.dart';
 
-
 class CompetitionMatches {
 
   final int competitionSeasonId;
@@ -9,12 +8,10 @@ class CompetitionMatches {
   final List<MatchSummary> matches;
 
   CompetitionMatches({
-
     required this.competitionSeasonId,
     required this.competitionName,
     required this.competitionLogo,
     required this.matches,
-
   });
 
   factory CompetitionMatches.fromJson(Map<String,dynamic> json){

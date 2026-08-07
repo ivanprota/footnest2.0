@@ -10,10 +10,8 @@ class TeamCompetition {
 
   factory TeamCompetition.fromJson(Map<String,dynamic> json) {
     return TeamCompetition(
-      competitionName:
-          json['competitionName'],
-      seasonName:
-          json['seasonName'],
+      competitionName: json['competitionName'],
+      seasonName: json['seasonName'],
     );
   }
 

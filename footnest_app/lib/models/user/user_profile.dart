@@ -1,16 +1,12 @@
 class UserProfile {
 
   final String username;
-
   final DateTime createdAt;
-
   final bool admin;
-
   final int totalBets;
   final int wonBets;
   final int lostBets;
   final int openBets;
-
   final int totalPredictions;
   final int wonPredictions;
   final int lostPredictions;
@@ -35,12 +31,10 @@ class UserProfile {
       username: json['username'],
       createdAt: DateTime.parse(json['createdAt']),
       admin: json['admin'],
-
       totalBets: json['totalBets'],
       wonBets: json['wonBets'],
       lostBets: json['lostBets'],
       openBets: json['openBets'],
-
       totalPredictions: json['totalPredictions'],
       wonPredictions: json['wonPredictions'],
       lostPredictions: json['lostPredictions'],

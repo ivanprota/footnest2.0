@@ -4,18 +4,13 @@ class CompetitionSeason {
   final String competitionName;
   final String seasonName;
 
-
   CompetitionSeason({
     required this.id,
     required this.competitionName,
     required this.seasonName,
   });
 
-
-  factory CompetitionSeason.fromJson(
-      Map<String, dynamic> json
-  ) {
-
+  factory CompetitionSeason.fromJson(Map<String, dynamic> json) {
     return CompetitionSeason(
       id: json['id'],
       competitionName:
@@ -25,7 +20,7 @@ class CompetitionSeason {
     );
   }
 
-
   String get displayName =>
       '$competitionName $seasonName';
+      
 }

@@ -100,6 +100,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: ProfileStatCard(
                     title: "Schedine",
                     icon: Icons.receipt_long,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MyBetsScreen(),
+                        )
+                      );
+                    },
                     items: [
 
                       ProfileStatItem(
@@ -137,6 +145,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: ProfileStatCard(
                     title:"Pronostici",
                     icon: Icons.tips_and_updates,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MyPredictionsScreen()
+                        )
+                      );
+                    },
                     items: [
 
                       ProfileStatItem(
@@ -173,140 +189,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height:30),
 
-
             Text(
-
               "Ultime schedine",
-
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge,
-
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-
 
             const SizedBox(height:10),
 
-
-
             ...bets.map(
-
-              (bet)=>
-
-                BetPreviewTile(
-                  bet: bet,
-                )
-
+              (bet)=> BetPreviewTile(bet: bet)
             ),
-
-
-
-            TextButton(
-
-              onPressed: () {
-
-                Navigator.push(
-
-                  context,
-
-                  MaterialPageRoute(
-
-                    builder: (_) =>
-                        const MyBetsScreen(),
-
-                  ),
-
-                );
-
-              },
-
-
-              child:
-                  const Text(
-                    "Vedi tutte",
-                  ),
-
-            ),
-
-
 
             const SizedBox(height:30),
 
-
-
             Text(
-
               "Ultimi pronostici",
-
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge,
-
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-
-
 
             const SizedBox(height:10),
 
-
-
             ...predictions.map(
-
               (prediction)=>
-
                 PredictionPreviewTile(
-
-                prediction: prediction,
-
-
-                onTap: () {
-
-
-                context.go(
-
-                "/matches/${prediction.matchId}",
-
-                );
-
-
-                },
-
+                  prediction: prediction,
+                  onTap: () {
+                    context.go(
+                    "/matches/${prediction.matchId}",
+                    );
+                  },
                 )
-
             ),
-
-
-
-            TextButton(
-
-              onPressed: () {
-
-
-                Navigator.push(
-
-                  context,
-
-
-                  MaterialPageRoute(
-
-                    builder: (_) =>
-                        const MyPredictionsScreen(),
-
-                  ),
-
-                );
-
-
-              },
-
-
-              child:
-                  const Text(
-                    "Vedi tutti",
-                  ),
-
-            ),          
-
+         
           ],
         ),
       ),

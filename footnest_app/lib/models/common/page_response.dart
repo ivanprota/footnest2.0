@@ -1,11 +1,8 @@
 class PageResponse<T> {
 
   final List<T> content;
-
   final int page;
-
   final int totalPages;
-
   final int totalElements;
 
   PageResponse({

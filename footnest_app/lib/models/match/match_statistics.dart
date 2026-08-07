@@ -1,23 +1,18 @@
 class MatchStatistics {
 
   final int id;
-
   final int teamId;
   final String teamName;
   final String teamLogo;
-
   final double? xg;
   final double? possession;
-
   final int? totalShots;
   final int? shotsOnTarget;
   final int? bigChances;
   final int? corners;
-
   final int? yellowCards;
   final int? redCards;
   final int? fouls;
-
 
   MatchStatistics({
     required this.id,
@@ -35,11 +30,7 @@ class MatchStatistics {
     this.fouls,
   });
 
-
-  factory MatchStatistics.fromJson(
-      Map<String,dynamic> json
-  ) {
-
+  factory MatchStatistics.fromJson(Map<String,dynamic> json) {
     return MatchStatistics(
       id: json["id"],
       teamId: json["teamId"],
@@ -55,7 +46,6 @@ class MatchStatistics {
       redCards: json["redCards"],
       fouls: json["fouls"],
     );
-
   }
 
 }

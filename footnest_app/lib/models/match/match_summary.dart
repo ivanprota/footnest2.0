@@ -13,7 +13,6 @@ class MatchSummary {
   final String status;
 
   MatchSummary({
-
     required this.id,
     required this.homeTeam,
     required this.awayTeam,
@@ -25,7 +24,6 @@ class MatchSummary {
     required this.awayGoals,
     required this.matchday,
     required this.status,
-
   });
 
   factory MatchSummary.fromJson(Map<String,dynamic> json){
@@ -45,7 +43,6 @@ class MatchSummary {
   }
 
   String get kickoffText {
-
     if (kickoffTime == null || kickoffTime!.isEmpty) {
       return "--:--";
     }

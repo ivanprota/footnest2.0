@@ -3,9 +3,13 @@ package com.footnest.footnest_backend.mapper;
 import com.footnest.footnest_backend.dto.prediction.PredictionDTO;
 import com.footnest.footnest_backend.entity.FootballMatch;
 import com.footnest.footnest_backend.entity.Prediction;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class PredictionMapper {
 
     public PredictionDTO toDTO(Prediction prediction) {

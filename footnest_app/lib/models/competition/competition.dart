@@ -8,7 +8,6 @@ class Competition {
   final String type;
   final List<CompetitionSeason> seasons;
 
-
   const Competition({
     required this.id,
     required this.name,
@@ -17,9 +16,7 @@ class Competition {
     required this.seasons,
   });
 
-
   factory Competition.fromJson(Map<String, dynamic> json) {
-
     return Competition(
       id: json['id'],
       name: json['name'] ?? '',
@@ -32,7 +29,6 @@ class Competition {
           .toList()
           ?? [],
     );
-
   }
 
 }
