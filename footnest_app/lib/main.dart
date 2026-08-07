@@ -10,9 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('it_IT', null,);
   setupLocator();
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

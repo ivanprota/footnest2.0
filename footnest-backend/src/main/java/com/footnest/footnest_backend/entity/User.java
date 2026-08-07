@@ -33,5 +33,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Bet> bets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Prediction> predictions = new ArrayList<>();
     
 }

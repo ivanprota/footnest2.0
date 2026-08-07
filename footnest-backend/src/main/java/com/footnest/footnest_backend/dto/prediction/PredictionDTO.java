@@ -31,4 +31,10 @@ public class PredictionDTO {
 
     private Double odd;
 
+    private Boolean settled;
+
+    private Boolean won;
+
+    private String competitionLogo;
+
 }

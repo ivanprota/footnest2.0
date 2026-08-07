@@ -10,6 +10,9 @@ class Prediction {
   final String? kickoffTime;
   final String prediction;
   final double odd;
+  final bool settled;
+  final bool won;
+  final String competitionLogo;
 
 
 
@@ -25,6 +28,9 @@ class Prediction {
     required this.kickoffTime,
     required this.prediction,
     required this.odd,
+    required this.settled,
+    required this.won,
+    required this.competitionLogo,
 
   });
 
@@ -42,6 +48,9 @@ class Prediction {
       kickoffTime: json['kickoffTime'],
       prediction: json['prediction'],
       odd: (json['odd'] as num).toDouble(),
+      settled: json['settled'] ?? false,
+      won: json['won'] ?? false,
+      competitionLogo: json['competitionLogo'] ?? "",
     );
   }
 
@@ -54,5 +63,15 @@ class Prediction {
     }
 
     return kickoffTime!.substring(0,5);
+  }
+
+  String get status {
+    if(!settled) {
+      return "OPEN";
+    }
+
+    return won
+        ? "WON"
+        : "LOST";
   }
 }

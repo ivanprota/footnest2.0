@@ -33,9 +33,6 @@ public class BetSelectionService {
     public BetSelection update(Long id, BetSelection betSelection) {
         BetSelection exsisting = findById(id);
 
-        exsisting.setSettled(betSelection.getSettled());
-        exsisting.setWon(betSelection.getWon());
-
         return betSelectionRepository.save(exsisting);
     }
 

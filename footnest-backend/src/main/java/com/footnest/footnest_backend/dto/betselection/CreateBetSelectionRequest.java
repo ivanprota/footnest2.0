@@ -7,10 +7,6 @@ import lombok.Setter;
 @Setter
 public class CreateBetSelectionRequest {
 
-    private Long matchId;
-
-    private String prediction;
-
-    private Double odd;
+    private Long predictionId;
 
 }

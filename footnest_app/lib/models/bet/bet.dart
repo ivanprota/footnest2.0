@@ -21,6 +21,14 @@ class Bet {
     required this.selections,
   });
 
+  double get totalOdd {
+    return selections.fold(
+      1,
+      (value, selection) =>
+          value * selection.odd,
+    );
+  }
+
   factory Bet.fromJson(Map<String,dynamic> json){
     return Bet(
       id: json['id'],

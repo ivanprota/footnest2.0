@@ -186,12 +186,12 @@ class _TeamsScreenState extends State<TeamsScreen> with AutomaticKeepAliveClient
 
                 const SizedBox(height: 15),
 
-                Text(
-                  "${teams.length} squadre",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium,
-                ),
+                // Text(
+                //   "${teams.length} squadre",
+                //   style: Theme.of(context)
+                //       .textTheme
+                //       .titleMedium,
+                // ),
 
                 const SizedBox(height: 12),
 

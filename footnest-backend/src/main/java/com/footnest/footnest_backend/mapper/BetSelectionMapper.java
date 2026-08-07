@@ -8,36 +8,40 @@ import com.footnest.footnest_backend.entity.BetSelection;
 @Component
 public class BetSelectionMapper {
 
-
-    public BetSelectionDTO toDTO(BetSelection selection) {
-
-        var match = selection.getMatch();
+public BetSelectionDTO toDTO(BetSelection selection) {
 
 
-        return new BetSelectionDTO(
+    var prediction = selection.getPrediction();
 
-            selection.getId(),
+    var match = prediction.getMatch();
 
-            match.getId(),
 
-            match.getHomeTeam().getName(),
+    return new BetSelectionDTO(
 
-            match.getAwayTeam().getName(),
+        selection.getId(),
 
-            match.getHomeTeam().getLogoPath(),
+        prediction.getId(),
 
-            match.getAwayTeam().getLogoPath(),
+        match.getId(),
 
-            selection.getPrediction(),
+        match.getHomeTeam().getName(),
 
-            selection.getOdd(),
+        match.getAwayTeam().getName(),
 
-            selection.getSettled(),
+        match.getHomeTeam().getLogoPath(),
 
-            selection.getWon()
+        match.getAwayTeam().getLogoPath(),
 
-        );
+        prediction.getPrediction(),
 
-    }
+        prediction.getOdd(),
+
+        prediction.getSettled(),
+
+        prediction.getWon()
+
+    );
+
+}
 
 }

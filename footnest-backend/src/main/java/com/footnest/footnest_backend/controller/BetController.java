@@ -2,13 +2,11 @@ package com.footnest.footnest_backend.controller;
 
 import com.footnest.footnest_backend.dto.bet.BetDTO;
 import com.footnest.footnest_backend.dto.bet.CreateBetRequest;
+import com.footnest.footnest_backend.dto.common.PageResponse;
 import com.footnest.footnest_backend.service.BetService;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
-
-import java.util.List;
-
 
 @RestController
 @RequestMapping("/bets")
@@ -21,9 +19,18 @@ public class BetController {
         this.betService = betService;
     }
 
-    @GetMapping
-    public List<BetDTO> getMyBets(Authentication authentication){
-        return betService.findAll(authentication.getName());
+    @GetMapping("/my")
+    public PageResponse<BetDTO> getMyBets(
+            Authentication authentication,
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="10") int size
+    )
+    {
+        return betService.findPage(
+                authentication.getName(),
+                page,
+                size
+        );
     }
 
     @PostMapping

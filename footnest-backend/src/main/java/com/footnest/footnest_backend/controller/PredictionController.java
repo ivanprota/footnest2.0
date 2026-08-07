@@ -1,5 +1,6 @@
 package com.footnest.footnest_backend.controller;
 
+import com.footnest.footnest_backend.dto.common.PageResponse;
 import com.footnest.footnest_backend.dto.prediction.CreatePredictionRequest;
 import com.footnest.footnest_backend.dto.prediction.PredictionDTO;
 import com.footnest.footnest_backend.service.PredictionService;
@@ -24,6 +25,20 @@ public class PredictionController {
     public List<PredictionDTO> getMyPredictions(Authentication authentication) {
         String username = authentication.getName();
         return predictionService.findAllByUsername(username);
+    }
+
+    @GetMapping("/my")
+    public PageResponse<PredictionDTO> getMyPredictionsPage(
+            Authentication authentication,
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="10") int size
+    )
+    {
+        return predictionService.findPage(
+                authentication.getName(),
+                page,
+                size
+        );
     }
 
     @GetMapping("/match/{matchId}")

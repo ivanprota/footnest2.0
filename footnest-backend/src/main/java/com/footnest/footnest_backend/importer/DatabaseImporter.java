@@ -4,8 +4,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import org.springframework.boot.CommandLineRunner;
-//import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Component;
 
 import com.footnest.footnest_backend.entity.Competition;
 import com.footnest.footnest_backend.entity.Competition.CompetitionType;
@@ -23,9 +22,9 @@ import com.footnest.footnest_backend.repository.TeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
-//@Component
+@Component
 @RequiredArgsConstructor
-public class DatabaseImporter implements CommandLineRunner {
+public class DatabaseImporter {
 
     private final TeamRepository teamRepository;
     private final CompetitionRepository competitionRepository;
@@ -36,12 +35,7 @@ public class DatabaseImporter implements CommandLineRunner {
 
     private final String BASE_PATH = "uploads/teams";
 
-    @Override
-    public void run(String... args) throws Exception {
-        importTeams();
-    }
-
-    private void importTeams() {
+    public void importTeams() {
         Season season = createSeason();
 
         File baseFolder = new File(BASE_PATH);
@@ -67,14 +61,14 @@ public class DatabaseImporter implements CommandLineRunner {
     }
 
     private Season createSeason() {
-        Optional<Season> existing = seasonRepository.findByName("2025/2026");
+        Optional<Season> existing = seasonRepository.findByName("2026/2027");
 
         if(existing.isPresent()) {
             return existing.get();
         }
 
         Season season = new Season();
-        season.setName("2025/2026");
+        season.setName("2026/2027");
         season.setStartDate(LocalDate.of(2025,8,1));
         season.setEndDate(LocalDate.of(2026,5,31));
 

@@ -5,16 +5,20 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
 import com.footnest.footnest_backend.dto.bet.BetDTO;
 import com.footnest.footnest_backend.dto.bet.CreateBetRequest;
+import com.footnest.footnest_backend.dto.common.PageResponse;
 import com.footnest.footnest_backend.entity.Bet;
 import com.footnest.footnest_backend.entity.BetSelection;
-import com.footnest.footnest_backend.entity.FootballMatch;
+import com.footnest.footnest_backend.entity.Prediction;
 import com.footnest.footnest_backend.entity.User;
 import com.footnest.footnest_backend.exception.ResourceNotFoundException;
 import com.footnest.footnest_backend.mapper.BetMapper;
 import com.footnest.footnest_backend.repository.BetRepository;
-import com.footnest.footnest_backend.repository.FootballMatchRepository;
+import com.footnest.footnest_backend.repository.PredictionRepository;
 import com.footnest.footnest_backend.repository.UserRepository;
 
 @Service
@@ -22,19 +26,19 @@ public class BetService {
     
     private final BetRepository betRepository;
     private final UserRepository userRepository;
-    private final FootballMatchRepository footballMatchRepository;
+    private final PredictionRepository predictionRepository;
     private final BetMapper betMapper;
 
     public BetService(
         BetRepository betRepository,
         UserRepository userRepository,
-        FootballMatchRepository footballMatchRepository,
+        PredictionRepository predictionRepository,
         BetMapper betMapper
     ) 
     {
         this.betRepository = betRepository;
         this.userRepository = userRepository;
-        this.footballMatchRepository = footballMatchRepository;
+        this.predictionRepository = predictionRepository;
         this.betMapper = betMapper;
     }
 
@@ -59,21 +63,36 @@ public class BetService {
                     .orElseThrow(() -> new ResourceNotFoundException("Schedina non trovata con id: " +id));
     }
 
-    public List<BetDTO> findByUsername(String username) {
+    public Bet save(Bet bet) {
+        return betRepository.save(bet);
+    }
 
-        User user = userRepository.findByUsername(username)
+    public PageResponse<BetDTO> findPage(
+            String username,
+            int page,
+            int size
+    ) {
+
+        User user = userRepository
+                .findByUsername(username)
                 .orElseThrow(() ->
                         new RuntimeException("Utente non trovato"));
 
-        return betRepository
-                .findByUserIdOrderByCreatedAtDesc(user.getId())
-                .stream()
-                .map(betMapper::toDTO)
-                .toList();
-    }
+        Page<Bet> result =
+                betRepository.findByUserIdOrderByCreatedAtDesc(
+                        user.getId(),
+                        PageRequest.of(page, size)
+                );
 
-    public Bet save(Bet bet) {
-        return betRepository.save(bet);
+        return new PageResponse<>(
+                result.getContent()
+                        .stream()
+                        .map(betMapper::toDTO)
+                        .toList(),
+                result.getNumber(),
+                result.getTotalPages(),
+                result.getTotalElements()
+        );
     }
 
     @Transactional
@@ -99,31 +118,16 @@ public class BetService {
                 .stream()
                 .map(selectionRequest -> {
 
+                    Prediction prediction =
+                        predictionRepository.findById(
+                            selectionRequest.getPredictionId()
+                        ).orElseThrow();
 
-                    FootballMatch match =
-                            footballMatchRepository
-                            .findById(
-                                selectionRequest.getMatchId()
-                            )
-                            .orElseThrow();
-
-
-                    BetSelection selection =
-                            new BetSelection();
-
+                    BetSelection selection = new BetSelection();
 
                     selection.setBet(bet);
 
-                    selection.setMatch(match);
-
-                    selection.setPrediction(
-                        selectionRequest.getPrediction()
-                    );
-
-                    selection.setOdd(
-                        selectionRequest.getOdd()
-                    );
-
+                    selection.setPrediction(prediction);
 
                     return selection;
 

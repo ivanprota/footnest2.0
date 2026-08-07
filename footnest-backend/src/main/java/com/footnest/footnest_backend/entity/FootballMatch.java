@@ -57,7 +57,7 @@ public class FootballMatch {
     private List<MatchStatistics> statistics = new ArrayList<>();
 
     @OneToMany(mappedBy = "match")
-    private List<BetSelection> selections = new ArrayList<>();
+    private List<Prediction> predictions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "season_id", nullable = false)

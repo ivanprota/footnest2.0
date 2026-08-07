@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:footnest_app/services/auth_state_service.dart';
+import 'package:footnest_app/services/profile_refresh_service.dart';
 import 'package:go_router/go_router.dart';
 
 import '/services/service_locator.dart';
-import '/routes/routes.dart';
+import '/services/profile_service.dart';
+
+import '/models/user/user_profile.dart';
+import '/models/bet/bet.dart';
+import '/models/prediction/prediction.dart';
+
+import '/widgets/profile/profile_header.dart';
+import '/widgets/profile/profile_stat_card.dart';
+import '/widgets/profile/bet_preview_tile.dart';
+import '/widgets/profile/prediction_preview_tile.dart';
+
+import '/screens/profile/my_bets_screen.dart';
+import '/screens/profile/my_predictions_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
 
@@ -12,85 +24,293 @@ class ProfileScreen extends StatefulWidget {
   });
 
   @override
-  State<ProfileScreen> createState() =>
-  _ProfileScreenState();
-
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
-
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
+  UserProfile? profile;
 
-  String? username;
+  List<Bet> bets = [];
+
+  List<Prediction> predictions = [];
+
+  bool loading = true;
+
+  late final ProfileRefreshService refreshService;
 
   @override
   void initState() {
     super.initState();
-    loadUser();
+    refreshService = locator<ProfileRefreshService>();
+    refreshService.addListener(loadData);
+    loadData();
   }
 
-  Future<void> loadUser() async {
-    final auth = await locator<AuthStateService>();
+  @override
+  void dispose() {
+    refreshService.removeListener(loadData);
+    super.dispose();
+  }
+
+  Future<void> loadData() async {
+    final service = locator<ProfileService>();
+    final profileData = await service.getProfile();
+    final betsData =
+        await service.getBets(
+          size: 10,
+        );
+
+    final predictionsData =
+        await service.getPredictions(
+          size: 10,
+        );
+
     setState(() {
-      username = auth.username;
+      profile = profileData;
+      bets = betsData.content;
+      predictions = predictionsData.content;
+      loading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if(loading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            context.go(
-              AppRoutes.home,
-            );
-          },
-        ),
-        title: const Text("Profilo"),
-      ),
-      body: Center(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children:[
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(25),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-                const Icon(
-                  Icons.account_circle,
-                  size:80,
+            ProfileHeader(profile: profile!),
+
+            const SizedBox(height:25),
+
+            Row(
+              children: [
+
+                Expanded(
+                  child: ProfileStatCard(
+                    title: "Schedine",
+                    icon: Icons.receipt_long,
+                    items: [
+
+                      ProfileStatItem(
+                        label:"Totali",
+                        value:
+                          profile!.totalBets,
+                      ),
+
+                      ProfileStatItem(
+                        label:"Vinte",
+                        value:
+                          profile!.wonBets,
+                      ),
+
+                      ProfileStatItem(
+                        label:"Perse",
+                        value:
+                          profile!.lostBets,
+                      ),
+
+                      ProfileStatItem(
+                        label:"Aperte",
+                        value:
+                          profile!.openBets,
+                      ),
+
+                    ],
+
+                  ),
                 ),
 
-                Text(
-                  username ?? "",
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                const SizedBox(width:20),
 
-                const SizedBox(height:20),
+                Expanded(
+                  child: ProfileStatCard(
+                    title:"Pronostici",
+                    icon: Icons.tips_and_updates,
+                    items: [
 
-                ElevatedButton(
-                  onPressed:() async {
-                    await locator<AuthStateService>().logout();
+                      ProfileStatItem(
+                        label:"Totali",
+                        value:
+                          profile!.totalPredictions,
+                      ),
 
-                    if(context.mounted) {
-                      context.go(
-                        AppRoutes.login,
-                      );
-                    }
-                  },
-                  child: const Text("Logout"),
+                      ProfileStatItem(
+                        label:"Vinti",
+                        value:
+                          profile!.wonPredictions,
+                      ),
+
+                      ProfileStatItem(
+                        label:"Persi",
+                        value:
+                          profile!.lostPredictions,
+                      ),
+
+                      ProfileStatItem(
+                        label:"Aperti",
+                        value:
+                          profile!.openPredictions,
+                      ),
+
+                    ],
+
+                  ),
                 )
 
-              ]
+              ],
+            ),
+
+            const SizedBox(height:30),
+
+
+            Text(
+
+              "Ultime schedine",
+
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge,
 
             ),
-          ),
+
+
+            const SizedBox(height:10),
+
+
+
+            ...bets.map(
+
+              (bet)=>
+
+                BetPreviewTile(
+                  bet: bet,
+                )
+
+            ),
+
+
+
+            TextButton(
+
+              onPressed: () {
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder: (_) =>
+                        const MyBetsScreen(),
+
+                  ),
+
+                );
+
+              },
+
+
+              child:
+                  const Text(
+                    "Vedi tutte",
+                  ),
+
+            ),
+
+
+
+            const SizedBox(height:30),
+
+
+
+            Text(
+
+              "Ultimi pronostici",
+
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge,
+
+            ),
+
+
+
+            const SizedBox(height:10),
+
+
+
+            ...predictions.map(
+
+              (prediction)=>
+
+                PredictionPreviewTile(
+
+                prediction: prediction,
+
+
+                onTap: () {
+
+
+                context.go(
+
+                "/matches/${prediction.matchId}",
+
+                );
+
+
+                },
+
+                )
+
+            ),
+
+
+
+            TextButton(
+
+              onPressed: () {
+
+
+                Navigator.push(
+
+                  context,
+
+
+                  MaterialPageRoute(
+
+                    builder: (_) =>
+                        const MyPredictionsScreen(),
+
+                  ),
+
+                );
+
+
+              },
+
+
+              child:
+                  const Text(
+                    "Vedi tutti",
+                  ),
+
+            ),          
+
+          ],
         ),
       ),
     );
-
   }
 
 }

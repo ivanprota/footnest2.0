@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:footnest_app/services/profile_refresh_service.dart';
 
 import '/services/service_locator.dart';
 import '/services/football_match_service.dart';
@@ -82,6 +83,8 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
 
     await predictionService.delete(id);
 
+    locator<ProfileRefreshService>().refresh();
+
     setState(() {
       betSlip.removeWhere(
         (p) => p.id == id,
@@ -93,6 +96,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
 
   Future createPrediction(Map<String,dynamic> body) async {
     await predictionService.create(body);
+    locator<ProfileRefreshService>().refresh();
     await loadData();
   }
 
@@ -143,32 +147,35 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
     });
   }
 
-  Future saveBet(String name, List<Prediction> selections) async {
+  Future saveBet(String name, List selections) async {
+
     await betService.create({
+
       "name":
           name.trim().isEmpty
-              ? "Schedina"
-              : name.trim(),
+          ? "Schedina"
+          : name.trim(),
+
       "selections":
-        selections.map((prediction){
-          return {
+          selections.map((prediction){
 
-            "matchId":
-                prediction.matchId,
+            return {
 
-            "prediction":
-                prediction.prediction,
+              "predictionId":
+                  prediction.id,
 
-            "odd":
-                prediction.odd,
+            };
 
-          };
-        }).toList(),
+          }).toList(),
+
     });
+
+    locator<ProfileRefreshService>().refresh();
 
     setState(() {
       betSlip.clear();
     });
+
   }
 
   Widget _buildBetSlipBar() {

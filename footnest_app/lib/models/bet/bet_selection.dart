@@ -61,7 +61,7 @@ class BetSelection {
       odd: (json['odd'] as num)
           .toDouble(),
 
-      settled: json['settled'],
+      settled: json['settled'] ?? false,
 
       won: json['won'],
 

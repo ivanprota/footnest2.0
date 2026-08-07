@@ -22,7 +22,10 @@ public class PredictionMapper {
                 match.getDate(),
                 match.getKickoffTime(),
                 prediction.getPrediction(),
-                prediction.getOdd()
+                prediction.getOdd(),
+                prediction.getSettled(),
+                prediction.getWon(),
+                match.getCompetitionSeason().getCompetition().getLogoPath()
         );
     }
 

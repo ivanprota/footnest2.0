@@ -1,5 +1,6 @@
 package com.footnest.footnest_backend.service;
 
+import com.footnest.footnest_backend.dto.common.PageResponse;
 import com.footnest.footnest_backend.dto.prediction.CreatePredictionRequest;
 import com.footnest.footnest_backend.dto.prediction.PredictionDTO;
 import com.footnest.footnest_backend.entity.FootballMatch;
@@ -11,6 +12,8 @@ import com.footnest.footnest_backend.repository.FootballMatchRepository;
 import com.footnest.footnest_backend.repository.PredictionRepository;
 import com.footnest.footnest_backend.repository.UserRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,8 +49,7 @@ public class PredictionService {
 
     public List<PredictionDTO> findAllByUsername(String username) {
         User user = userRepository.findByUsername(username)
-            .orElseThrow(() -> new RuntimeException("Utente non trovato")
-            );
+                        .orElseThrow(() -> new RuntimeException("Utente non trovato"));
 
         return predictionRepository
                 .findByUserId(user.getId())
@@ -69,6 +71,34 @@ public class PredictionService {
                 .map(predictionMapper::toDTO)
                 .toList();
     }
+
+        public PageResponse<PredictionDTO> findPage(
+                String username,
+                int page,
+                int size
+        ) {
+
+                User user = userRepository
+                        .findByUsername(username)
+                        .orElseThrow(() ->
+                                new RuntimeException("Utente non trovato"));
+
+                Page<Prediction> result =
+                        predictionRepository.findByUserIdOrderByCreatedAtDesc(
+                                user.getId(),
+                                PageRequest.of(page, size)
+                        );
+
+                return new PageResponse<>(
+                        result.getContent()
+                                .stream()
+                                .map(predictionMapper::toDTO)
+                                .toList(),
+                        result.getNumber(),
+                        result.getTotalPages(),
+                        result.getTotalElements()
+                );
+        }
 
     public PredictionDTO savePrediction(String username, CreatePredictionRequest request) {
         User user = userRepository

@@ -7,23 +7,36 @@ import lombok.Getter;
 @AllArgsConstructor
 public class BetSelectionDTO {
 
+
     private Long id;
+
+
+    private Long predictionId;
+
 
     private Long matchId;
 
+
     private String homeTeam;
+
 
     private String awayTeam;
 
+
     private String homeLogo;
+
 
     private String awayLogo;
 
+
     private String prediction;
+
 
     private Double odd;
 
+
     private Boolean settled;
+
 
     private Boolean won;
 

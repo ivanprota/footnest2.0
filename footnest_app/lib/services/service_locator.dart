@@ -12,6 +12,8 @@ import '/services/auth_service.dart';
 import '/services/auth_state_service.dart';
 import '/services/prediction_service.dart';
 import '/services/bet_service.dart';
+import '/services/profile_service.dart';
+import '/services/profile_refresh_service.dart';
 
 
 final locator = GetIt.instance;
@@ -89,6 +91,16 @@ void setupLocator() {
     () => BetService(
       locator<ApiClient>(),
     ),
+  );
+
+  locator.registerLazySingleton(
+  () => ProfileService(
+        locator()
+    ),
+  );
+
+  locator.registerLazySingleton<ProfileRefreshService>(
+    () => ProfileRefreshService(),
   );
 
 }

@@ -357,6 +357,8 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                             color:Colors.green,
                           ),
                           onPressed: savePrediction,
+                          mouseCursor: SystemMouseCursors.click,
+                          tooltip: "Salva",
                         ),
 
                       ],

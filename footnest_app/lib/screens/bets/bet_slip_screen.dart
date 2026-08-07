@@ -92,139 +92,166 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
                       horizontal:16,
                       vertical:6,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        children: [
+                    child: Stack(
+                      children: [
 
-                          Row(
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
                             children: [
 
-                              Expanded(
+                              Row(
+                                children: [
+
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+
+                                        Flexible(
+                                          child: Text(
+                                            prediction.homeTeam,
+                                            textAlign: TextAlign.right,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+
+                                        const SizedBox(width:8),
+
+                                        Image.network(
+                                          "${ApiConfig.baseUrl}/uploads/${prediction.homeLogo}",
+                                          width:32,
+                                          height:32,
+                                          errorBuilder: (_,__,___)=>
+                                            const Icon(
+                                              Icons.shield,
+                                              size:32,
+                                            ),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+
+
+                                  const SizedBox(width:20),
+
+
+                                  const Text(
+                                    "VS",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+
+
+                                  const SizedBox(width:20),
+
+
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+
+                                        Image.network(
+                                          "${ApiConfig.baseUrl}/uploads/${prediction.awayLogo}",
+                                          width:32,
+                                          height:32,
+                                          errorBuilder: (_,__,___)=>
+                                            const Icon(
+                                              Icons.shield,
+                                              size:32,
+                                            ),
+                                        ),
+
+                                        const SizedBox(width:8),
+
+                                        Flexible(
+                                          child: Text(
+                                            prediction.awayTeam,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+
+
+                              const SizedBox(height:12),
+
+
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical:8,
+                                  horizontal:12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black12,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
 
-                                    Flexible(
-                                      child: Text(
-                                        prediction.homeTeam,
-                                        textAlign: TextAlign.right,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    Text(
+                                      prediction.prediction,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
 
-                                    const SizedBox(width:8),
+                                    const SizedBox(width:10),
 
-                                    Image.network(
-                                      "${ApiConfig.baseUrl}/uploads/${prediction.homeLogo}",
-                                      width:32,
-                                      height:32,
-                                      errorBuilder: (_,__,___)=>
-                                        const Icon(
-                                          Icons.shield,
-                                          size:32,
-                                        ),
+                                    Text(
+                                      "@${prediction.odd}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
                                     ),
 
                                   ],
                                 ),
                               ),
 
-
-                              const SizedBox(width:20),
-
-
-                              const Text(
-                                "VS",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-
-
-                              const SizedBox(width:20),
-
-
-                              Expanded(
-                                child: Row(
-                                  children: [
-
-                                    Image.network(
-                                      "${ApiConfig.baseUrl}/uploads/${prediction.awayLogo}",
-                                      width:32,
-                                      height:32,
-                                      errorBuilder: (_,__,___)=>
-                                        const Icon(
-                                          Icons.shield,
-                                          size:32,
-                                        ),
-                                    ),
-
-                                    const SizedBox(width:8),
-
-                                    Flexible(
-                                      child: Text(
-                                        prediction.awayTeam,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-
-                                  ],
-                                ),
-                              ),
 
                             ],
                           ),
+                        ),
 
-
-                          const SizedBox(height:12),
-
-
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical:8,
-                              horizontal:12,
+                        Positioned(
+                          top: 4,
+                          right: 4,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              size: 25,
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.black12,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-
-                                Text(
-                                  prediction.prediction,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-
-                                const SizedBox(width:10),
-
-                                Text(
-                                  "@${prediction.odd}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.green,
-                                  ),
-                                ),
-
-                              ],
-                            ),
+                            color: Colors.redAccent,
+                            tooltip: "Rimuovi pronostico",
+                            mouseCursor: SystemMouseCursors.click,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                            onPressed: () {
+                              widget.onRemove(prediction);
+                              setState(() {
+                                
+                              });
+                            },
                           ),
-
-
-                        ],
-                      ),
-                    ),
+                        ),
+                      ]
+                    )
                   );
                 },
               ),
@@ -234,21 +261,67 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
             padding: const EdgeInsets.all(16),
             child: SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: widget.selections.isEmpty
-                  ? null
-                  : () async {
-                        String name = nameController.text.trim();
-                        if(name.isEmpty) {
-                          name = generateDefaultName();
-                        }
+              height: 55,
+              child: SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    mouseCursor: WidgetStateProperty.all(
+                      widget.selections.isEmpty
+                          ? SystemMouseCursors.basic
+                          : SystemMouseCursors.click,
+                    ),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    elevation: WidgetStateProperty.all(6),
+                  ),
 
-                        await widget.onSave(name, widget.selections);
-                        if(context.mounted) {
-                          Navigator.pop(context);
-                        }
-                      },
-                  child: const Text("Salva schedina"),
+                  onPressed: widget.selections.isEmpty
+                      ? null
+                      : () async {
+
+                          String name = nameController.text.trim();
+
+                          if(name.isEmpty) {
+                            name = generateDefaultName();
+                          }
+
+                          await widget.onSave(
+                            name,
+                            widget.selections,
+                          );
+
+                          if(context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+
+                      Icon(
+                        Icons.save,
+                        size: 22,
+                      ),
+
+                      SizedBox(width: 10),
+
+                      Text(
+                        "Salva schedina",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
