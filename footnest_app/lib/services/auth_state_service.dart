@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import 'auth_service.dart';
 
 class AuthStateService extends ChangeNotifier {
@@ -8,30 +8,41 @@ class AuthStateService extends ChangeNotifier {
 
   AuthStateService({
     required this.authService,
-  });
+  }) {
+    loadUser();
+  }
 
   String? username;
   bool admin = false;
   bool logged = false;
 
-  Future<void> loadUser() async {
+  Future loadUser() async {
+
     logged = await authService.isLogged();
 
-    if(logged) {
+    if (logged) {
+
       username = await authService.getUsername();
-      final prefs = await authService.getPreferences();
-      admin = prefs.getBool("admin") ?? false;
+
+      final prefs =
+          await authService.getPreferences();
+
+      admin =
+          prefs.getBool("admin") ?? false;
+
     }
 
     notifyListeners();
   }
 
-  Future<void> loginSuccess() async {
+  Future loginSuccess() async {
     await loadUser();
   }
 
-  Future<void> logout() async {
+  Future logout() async {
+
     await authService.logout();
+
     username = null;
     admin = false;
     logged = false;

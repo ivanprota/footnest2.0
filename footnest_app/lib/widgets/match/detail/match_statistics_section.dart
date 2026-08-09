@@ -477,13 +477,17 @@ class MatchStatisticsSectionState extends State<MatchStatisticsSection> {
     return Text(
       value == null
           ? "-"
-          : value.toString(),
+          : key.endsWith("_xg")
+              ? (value as num).toStringAsFixed(2)
+              : key.endsWith("_possession")
+                  ? "${(value as num).round()}%"
+                  : value.toString(),
       textAlign:
           alignRight
               ? TextAlign.right
               : TextAlign.left,
       style: const TextStyle(
-        fontSize:18,
+        fontSize: 18,
         fontWeight: FontWeight.bold,
       ),
     );

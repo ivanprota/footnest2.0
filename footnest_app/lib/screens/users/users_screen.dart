@@ -186,6 +186,11 @@ class _UsersScreenState extends State<UsersScreen> {
 
                   final user = users[index];
 
+                  debugPrint(
+  "CURRENT USER: ${authStateService.username} | "
+  "ADMIN: ${authStateService.admin}",
+);
+
                   return _UserTile(
                     user: user,
                     isAdmin: authStateService.admin,

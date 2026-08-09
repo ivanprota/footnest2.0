@@ -66,4 +66,18 @@ public interface FootballMatchRepository extends JpaRepository<FootballMatch, Lo
         MatchStatus status
     );
 
+    @Query("""
+        SELECT DISTINCT m
+        FROM FootballMatch m
+        LEFT JOIN FETCH m.statistics
+        JOIN FETCH m.homeTeam
+        JOIN FETCH m.awayTeam
+        WHERE (m.homeTeam.id = :teamId OR m.awayTeam.id = :teamId)
+        AND m.status = 'PLAYED'
+        ORDER BY m.date DESC
+    """)
+    List<FootballMatch> findPlayedMatchesWithStatistics(
+            @Param("teamId") Long teamId
+    );
+
 }

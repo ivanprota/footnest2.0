@@ -8,6 +8,7 @@ import '/screens/shell/app_shell.dart';
 import '/screens/teams/teams_screen.dart';
 import '/screens/teams/team_details_screen.dart';
 import '/screens/teams/add_team_screen.dart';
+import '/screens/teams/team_statistics_screen.dart';
 
 import '/screens/matches/matches_screen.dart';
 import '/screens/matches/match_detail_screen.dart';
@@ -119,6 +120,20 @@ final GoRouter appRouter = GoRouter(
                       ),
                     );
                   },
+                  routes: [
+
+                    GoRoute(
+                      path: 'statistics',
+                      builder: (context, state) {
+                        return TeamStatisticsScreen(
+                          teamId: int.parse(
+                            state.pathParameters['id']!,
+                          ),
+                        );
+                      },
+                    ),
+
+                  ]
                 ),
 
               ],

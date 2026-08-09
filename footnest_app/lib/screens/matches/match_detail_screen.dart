@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '/models/match/match_detail.dart';
 import '/services/football_match_service.dart';
 import '/services/service_locator.dart';
+import '/services/team_refresh_service.dart';
 
 import '/widgets/match/detail/match_header.dart';
 import '/widgets/match/detail/match_score_card.dart';
@@ -122,6 +123,8 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
         },
       );
 
+      locator<TeamRefreshService>().refresh();
+
     }
     catch(e) {
       debugPrint(e.toString());
@@ -217,6 +220,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
 
     await loadMatch();
 
+    locator<TeamRefreshService>().refresh();
 
     if(mounted){
 

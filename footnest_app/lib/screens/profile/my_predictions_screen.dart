@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:footnest_app/widgets/profile/status_filter_bar.dart';
+import 'package:go_router/go_router.dart';
 
 import '/services/service_locator.dart';
 import '/services/profile_service.dart';
@@ -125,6 +126,9 @@ class _MyPredictionsScreenState extends State<MyPredictionsScreen> {
                       return PredictionPreviewTile(
                         prediction: filteredPredictions[index],
                         onRefresh: loadPredictions,
+                          onTap: () {
+                            context.push("/matches/${filteredPredictions[index].matchId}");
+                          },
                       );
 
                     },
