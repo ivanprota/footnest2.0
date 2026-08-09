@@ -38,7 +38,7 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Team Details",
+          "Dettagli Squadra",
         ),
       ),
       body: FutureBuilder(

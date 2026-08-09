@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:footnest_app/widgets/profile/status_filter_bar.dart';
 
 import '/services/service_locator.dart';
 import '/services/profile_service.dart';
@@ -25,6 +26,8 @@ class _MyPredictionsScreenState extends State<MyPredictionsScreen> {
   bool loading = true;
   int currentPage = 0;
   int totalPages = 0;
+
+  String filter = "ALL";
 
   @override
   void initState() {
@@ -61,6 +64,30 @@ class _MyPredictionsScreenState extends State<MyPredictionsScreen> {
     }
   }
 
+  List<Prediction> get filteredPredictions {
+
+    if(filter == "OPEN") {
+    return predictions
+        .where((p)=>!p.settled)
+        .toList();
+    }
+
+    if(filter == "WON") {
+    return predictions
+        .where((p)=>p.settled && p.won)
+        .toList();
+    }
+
+    if(filter == "LOST") {
+    return predictions
+        .where((p)=>p.settled && !p.won)
+        .toList();
+    }
+
+    return predictions;
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,13 +105,26 @@ class _MyPredictionsScreenState extends State<MyPredictionsScreen> {
             child: Column(
               children: [
 
+                StatusFilterBar(
+                  selected: filter,
+                  onChanged:(value) {
+                    setState(() {
+                      filter = value;
+                      currentPage = 0;
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 20,),
+
                 Expanded(
                   child: ListView.builder(
-                    itemCount: predictions.length,
+                    itemCount: filteredPredictions.length,
                     itemBuilder: (_, index) {
 
                       return PredictionPreviewTile(
-                        prediction: predictions[index],
+                        prediction: filteredPredictions[index],
+                        onRefresh: loadPredictions,
                       );
 
                     },

@@ -22,6 +22,11 @@ import '/screens/auth/register_screen.dart';
 
 import '/screens/profile/profile_screen.dart';
 
+import '/screens/users/users_screen.dart';
+import '/screens/users/user_profile_screen.dart';
+import '/screens/users/user_bet_screen.dart';
+import '/screens/users/user_prediction_screen.dart';
+
 import 'routes.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey =
@@ -184,6 +189,21 @@ final GoRouter appRouter = GoRouter(
         ),
 
         // -----------------
+        // USERS
+        // -----------------
+
+        StatefulShellBranch(
+          routes: [
+
+            GoRoute(
+              path: AppRoutes.users,
+              builder: (_,__) => const UsersScreen(),
+            ),
+
+          ],
+        ),
+
+        // -----------------
         // PROFILE
         // -----------------
 
@@ -193,6 +213,41 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: AppRoutes.profile,
               builder: (_,__) => const ProfileScreen(),
+              routes: [
+
+                GoRoute(
+                  path: 'user/:id',
+                  builder: (context, state) {
+                    return UserProfileScreen(userId: int.parse(state.pathParameters['id']!));
+                  },
+                  routes: [
+
+                    GoRoute(
+                      path: 'bets',
+                      builder: (context, state) {
+                        return UserBetsScreen(
+                          userId: int.parse(
+                            state.pathParameters['id']!,
+                          ),
+                        );
+                      },
+                    ),
+
+                    GoRoute(
+                      path: 'predictions',
+                      builder: (context, state) {
+                        return UserPredictionsScreen(
+                          userId: int.parse(
+                            state.pathParameters['id']!,
+                          ),
+                        );
+                      },
+                    ),
+
+                  ]
+                )
+
+              ]
             ),
 
           ],

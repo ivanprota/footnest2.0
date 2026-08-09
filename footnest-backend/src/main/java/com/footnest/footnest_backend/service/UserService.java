@@ -4,39 +4,48 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.footnest.footnest_backend.dto.user.UserDTO;
 import com.footnest.footnest_backend.entity.User;
 import com.footnest.footnest_backend.exception.ResourceNotFoundException;
+import com.footnest.footnest_backend.mapper.UserMapper;
 import com.footnest.footnest_backend.repository.UserRepository;
 
 @Service
 public class UserService {
     
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
-        public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+        return userRepository.findAll()
+                    .stream()
+                    .map(userMapper::toDTO)
+                    .toList();
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con id: " +id));
+    public UserDTO findById(Long id) {
+        User user = userRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con id: " +id));
+        
+        return userMapper.toDTO(user);
     }
 
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    public User update(Long id, User user) {
-        User existing = findById(id);
+    public UserDTO updateApproval(Long id, boolean approved) {
+        User user = userRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato con id: " +id));
 
-        existing.setApproved(user.isApproved());
-        existing.setAdmin(user.isAdmin());
-
-        return userRepository.save(existing);
+        user.setApproved(approved);
+        User saved = userRepository.save(user);
+        return userMapper.toDTO(saved);
     }
 
     public void delete(Long id) {

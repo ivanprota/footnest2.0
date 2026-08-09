@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/predictions")
@@ -44,6 +45,35 @@ public class PredictionController {
     @GetMapping("/match/{matchId}")
     public List<PredictionDTO> getByMatch(@PathVariable Long matchId, Authentication authentication) {
         return predictionService.findByMatch(authentication.getName(), matchId);
+    }
+
+    @GetMapping("/user/{userId}")
+    public PageResponse<PredictionDTO> getUserPredictions(
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return predictionService.findPageByUserId(
+                userId,
+                page,
+                size
+        );
+    }
+
+    @PutMapping("/{id}/status")
+    public PredictionDTO updateStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, Boolean> body,
+            Authentication authentication
+    ) 
+    {
+
+        return predictionService.updateStatus(
+            id,
+            body.get("settled"),
+            body.get("won"),
+            authentication.getName()
+        );
     }
 
     @PostMapping

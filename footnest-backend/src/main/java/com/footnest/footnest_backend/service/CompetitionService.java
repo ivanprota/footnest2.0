@@ -53,16 +53,6 @@ public class CompetitionService {
         return competitionRepository.save(competition);
     }
 
-    // public Competition update(Long id, Competition competition) {
-    //     Competition existing = findById(id);
-
-    //     existing.setName(competition.getName());
-    //     existing.setLogoPath(competition.getLogoPath());
-    //     existing.setType(competition.getType());
-
-    //     return competitionRepository.save(existing);
-    // }
-
     public void delete(Long id) {
         if (!competitionRepository.existsById(id)) {
             throw new ResourceNotFoundException("Competizione non trovata con id: " +id);

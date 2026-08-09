@@ -44,11 +44,6 @@ public class CompetitionController {
         return competitionService.save(competition);
     }
 
-    // @PutMapping("/{id}")
-    // public Competition update(@PathVariable Long id, @RequestBody Competition competition) {
-    //     return competitionService.update(id, competition);
-    // }
-
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         competitionService.delete(id);

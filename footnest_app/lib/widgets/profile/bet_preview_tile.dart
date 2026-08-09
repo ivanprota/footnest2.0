@@ -6,10 +6,14 @@ import '/config/api_config.dart';
 class BetPreviewTile extends StatefulWidget {
 
   final Bet bet;
+  final Function(int)? onDelete;
+  final bool readOnly;
 
   const BetPreviewTile({
     super.key,
     required this.bet,
+    this.onDelete,
+    this.readOnly = false
   });
 
   @override
@@ -76,6 +80,77 @@ class _BetPreviewTileState extends State<BetPreviewTile> {
         ),
         child: Card(
           child: ExpansionTile(
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              const Icon(Icons.keyboard_arrow_down),
+
+              if (widget.onDelete != null && !widget.readOnly)
+                IconButton(
+                  mouseCursor: SystemMouseCursors.click,
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.red
+                  ),
+                  onPressed: () {
+
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+
+                        return AlertDialog(
+                          title: const Text(
+                            "Elimina schedina?",
+                          ),
+
+                          content: const Text(
+                            "Sei sicuro di voler eliminare questa schedina?",
+                          ),
+
+                          actions: [
+
+                            TextButton(
+                              style: ButtonStyle(
+                                mouseCursor: WidgetStateProperty.all(SystemMouseCursors.click)
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text(
+                                "Annulla",
+                              ),
+                            ),
+
+                            TextButton(
+                              style: ButtonStyle(
+                                mouseCursor: WidgetStateProperty.all(SystemMouseCursors.click)
+                              ),
+                              onPressed: () {
+
+                                Navigator.pop(context);
+
+                                widget.onDelete?.call(
+                                  widget.bet.id,
+                                );
+
+                              },
+                              child: const Text(
+                                "Elimina",
+                              ),
+                            ),
+
+                          ],
+                        );
+
+                      },
+                    );
+
+                  },
+                ),
+
+            ],
+          ),
             leading: Icon(
               getStatusIcon(),
               color: getStatusColor(),
@@ -179,10 +254,10 @@ class _BetPreviewTileState extends State<BetPreviewTile> {
 
                                   Text(
                                     !selection.settled
-                                        ? "Vinto"
+                                        ? "Aperto"
                                         : selection.won == true
-                                          ? "Vinto"
-                                          : "Perso",
+                                            ? "Vinto"
+                                            : "Perso",
 
                                     style: TextStyle(
                                       fontSize:12,

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:footnest_app/services/prediction_service.dart';
+import 'package:footnest_app/services/service_locator.dart';
+import '/services/profile_refresh_service.dart';
 
 import '/models/prediction/prediction.dart';
 import '/config/api_config.dart';
@@ -7,11 +10,15 @@ class PredictionPreviewTile extends StatefulWidget {
 
   final Prediction prediction;
   final VoidCallback? onTap;
+  final VoidCallback? onRefresh;
+  final bool readOnly;
 
   const PredictionPreviewTile({
     super.key,
     required this.prediction,
-    this.onTap
+    this.onTap,
+    this.onRefresh,
+    this.readOnly = false,
   });
 
   @override
@@ -81,24 +88,114 @@ class _PredictionPreviewTileState extends State<PredictionPreviewTile> {
 
                       const SizedBox(height:8),
 
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal:8,
-                          vertical:4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: getStatusColor(prediction).withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          prediction.status,
-                          style: TextStyle(
-                            color: getStatusColor(prediction),
-                            fontWeight: FontWeight.bold,
-                            fontSize:11,
+                      if (!widget.readOnly)
+                        PopupMenuButton<String>(
+                          tooltip: "Modifica stato",
+                          onSelected: (value) async {
+                            final service = locator<PredictionService>();
+
+                            if (value == "OPEN") {
+                              await service.updateStatus(
+                                prediction.id,
+                                false,
+                                null,
+                              );
+                            }
+
+                            if (value == "WON") {
+                              await service.updateStatus(
+                                prediction.id,
+                                true,
+                                true,
+                              );
+                            }
+
+                            if (value == "LOST") {
+                              await service.updateStatus(
+                                prediction.id,
+                                true,
+                                false,
+                              );
+                            }
+
+                            widget.onRefresh?.call();
+                            locator<ProfileRefreshService>().refresh();
+                          },
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              value: "OPEN",
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: const SizedBox(
+                                  width: double.infinity,
+                                  child: Text("Segna aperto"),
+                                ),
+                              ),
+                            ),
+
+                            PopupMenuItem(
+                              value: "WON",
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: const SizedBox(
+                                  width: double.infinity,
+                                  child: Text("Segna vinto"),
+                                ),
+                              ),
+                            ),
+
+                            PopupMenuItem(
+                              value: "LOST",
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: const SizedBox(
+                                  width: double.infinity,
+                                  child: Text("Segna perso"),
+                                ),
+                              ),
+                            ),
+                          ],
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: getStatusColor(prediction).withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                prediction.status,
+                                style: TextStyle(
+                                  color: getStatusColor(prediction),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: getStatusColor(prediction).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            prediction.status,
+                            style: TextStyle(
+                              color: getStatusColor(prediction),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
-                      )
 
                     ],
                   ),
@@ -226,7 +323,7 @@ class _PredictionPreviewTileState extends State<PredictionPreviewTile> {
                         style: const TextStyle(
                           fontSize:12,
                         ),
-                      )
+                      ),
 
                     ],
                   )

@@ -81,17 +81,32 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
 
   Future deletePrediction(int id) async {
 
-    await predictionService.delete(id);
+    try {
 
-    locator<ProfileRefreshService>().refresh();
+      await predictionService.delete(id);
 
-    setState(() {
-      betSlip.removeWhere(
-        (p) => p.id == id,
+      locator<ProfileRefreshService>().refresh();
+
+      setState(() {
+        betSlip.removeWhere(
+          (p) => p.id == id,
+        );
+      });
+
+      await loadData();
+
+    } catch (e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Non puoi eliminare questo pronostico perché è presente in una schedina.",
+          ),
+        ),
       );
-    });
 
-    await loadData();
+    }
+
   }
 
   Future createPrediction(Map<String,dynamic> body) async {

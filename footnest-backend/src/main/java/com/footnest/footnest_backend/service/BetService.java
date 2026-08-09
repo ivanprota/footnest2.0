@@ -42,13 +42,8 @@ public class BetService {
         this.betMapper = betMapper;
     }
 
-    public List<BetDTO> findAll(String username){
-
-        User user =
-                userRepository
-                .findByUsername(username)
-                .orElseThrow();
-
+    public List<BetDTO> findAll(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow();
 
         return betRepository
                 .findByUserId(user.getId())
@@ -67,19 +62,11 @@ public class BetService {
         return betRepository.save(bet);
     }
 
-    public PageResponse<BetDTO> findPage(
-            String username,
-            int page,
-            int size
-    ) {
+    public PageResponse<BetDTO> findPage(String username, int page, int size) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Utente non trovato"));
 
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() ->
-                        new RuntimeException("Utente non trovato"));
-
-        Page<Bet> result =
-                betRepository.findByUserIdOrderByCreatedAtDesc(
+        Page<Bet> result = betRepository.findByUserIdOrderByCreatedAtDesc(
                         user.getId(),
                         PageRequest.of(page, size)
                 );
@@ -95,26 +82,29 @@ public class BetService {
         );
     }
 
+    public PageResponse<BetDTO> findPageByUserId(Long userId, int page, int size) {
+        Page<Bet> result = betRepository.findByUserIdOrderByCreatedAtDesc(userId, PageRequest.of(page, size));
+
+        return new PageResponse<>(
+                result.getContent()
+                        .stream()
+                        .map(betMapper::toDTO)
+                        .toList(),
+                result.getNumber(),
+                result.getTotalPages(),
+                result.getTotalElements()
+        );
+    }
+
     @Transactional
-    public BetDTO create(
-            String username,
-            CreateBetRequest request
-    ){
-
-        User user =
-                userRepository
-                .findByUsername(username)
-                .orElseThrow();
-
+    public BetDTO create(String username, CreateBetRequest request){
+        User user = userRepository.findByUsername(username).orElseThrow();
 
         Bet bet = new Bet();
-
         bet.setUser(user);
         bet.setName(request.getName());
 
-
-        List<BetSelection> selections =
-                request.getSelections()
+        List<BetSelection> selections = request.getSelections()
                 .stream()
                 .map(selectionRequest -> {
 
@@ -123,35 +113,22 @@ public class BetService {
                             selectionRequest.getPredictionId()
                         ).orElseThrow();
 
+                    if (!prediction.getUser().getId().equals(user.getId())) {
+                        throw new RuntimeException("Non puoi inserire il pronostico di un altro utente");
+                    }
+
                     BetSelection selection = new BetSelection();
-
                     selection.setBet(bet);
-
                     selection.setPrediction(prediction);
 
                     return selection;
-
-
-                })
-                .toList();
-
+                }).toList();
 
         bet.setSelections(selections);
-
 
         return betMapper.toDTO(
                 betRepository.save(bet)
         );
-
-    }
-
-    public Bet update(Long id, Bet bet) {
-        Bet existing = findById(id);
-
-        existing.setName(bet.getName());
-        existing.setStatus(bet.getStatus());
-
-        return betRepository.save(existing);
     }
 
     public void deleteBet(Long id, String username) {

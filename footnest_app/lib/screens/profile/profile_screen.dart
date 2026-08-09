@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:footnest_app/services/auth_service.dart';
+import 'package:footnest_app/services/bet_service.dart';
 import 'package:footnest_app/services/profile_refresh_service.dart';
 import 'package:go_router/go_router.dart';
 
@@ -74,6 +76,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  Future deleteBet(int id) async {
+    final service = locator<BetService>();
+    await service.delete(id);
+    locator<ProfileRefreshService>().refresh();
+    await loadData();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     if(loading) {
@@ -89,7 +99,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            ProfileHeader(profile: profile!),
+            ProfileHeader(
+              profile: profile!,
+              onLogout: () async {
+                final authService = locator<AuthService>();
+                await authService.logout();
+                if (context.mounted) {
+                  context.go("/login");
+                }
+              },
+            ),
 
             const SizedBox(height:25),
 
@@ -196,9 +215,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height:10),
 
-            ...bets.map(
-              (bet)=> BetPreviewTile(bet: bet)
-            ),
+            if (bets.isEmpty)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    "Nessuna schedina presente",
+                  ),
+                ),
+              )
+            else
+              ...bets.map(
+                (bet)=> BetPreviewTile(bet: bet, onDelete: deleteBet)
+              ),
 
             const SizedBox(height:30),
 
@@ -209,17 +238,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             const SizedBox(height:10),
 
-            ...predictions.map(
-              (prediction)=>
-                PredictionPreviewTile(
-                  prediction: prediction,
-                  onTap: () {
-                    context.go(
-                    "/matches/${prediction.matchId}",
-                    );
-                  },
-                )
-            ),
+            if (predictions.isEmpty)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    "Nessun pronostico presente",
+                  ),
+                ),
+              )
+            else
+              ...predictions.map(
+                (prediction)=>
+                  PredictionPreviewTile(
+                    prediction: prediction,
+                    onTap: () {
+                      context.push(
+                        "/matches/${prediction.matchId}",
+                      );
+                    },
+                  )
+              ),
          
           ],
         ),

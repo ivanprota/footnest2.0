@@ -7,51 +7,72 @@ import 'api_client.dart';
 
 class ProfileService {
 
-  final ApiClient api;
+  final ApiClient apiClient;
 
-  ProfileService(this.api);
+  ProfileService(this.apiClient);
 
   Future<UserProfile> getProfile() async {
 
     final response =
-        await api.get("/profile");
+        await apiClient.get("/profile");
 
     return UserProfile.fromJson(response);
 
   }
 
-  Future<PageResponse<Bet>> getBets({
-    int page = 0,
-    int size = 10,
-  }) async {
-
-    final response =
-        await api.get(
-          "/bets/my?page=$page&size=$size",
-        );
+  Future<PageResponse<Bet>> getBets({int page = 0, int size = 10}) async {
+    final response = await apiClient.get("/bets/my?page=$page&size=$size");
 
     return PageResponse.fromJson(
       response,
       Bet.fromJson,
     );
-
   }
 
-  Future<PageResponse<Prediction>> getPredictions({
-    int page = 0,
-    int size = 10,
-  }) async {
-
-    final response =
-        await api.get(
-          "/predictions/my?page=$page&size=$size",
-        );
+  Future<PageResponse<Prediction>> getPredictions({int page = 0, int size = 10,}) async {
+    final response = await apiClient.get("/predictions/my?page=$page&size=$size");
 
     return PageResponse.fromJson(
       response,
       Prediction.fromJson,
     );
+  }
 
+  Future<UserProfile> getUserProfile(int userId) async {
+    final response = await apiClient.get("/profile/$userId");
+    return UserProfile.fromJson(response);
+  }
+
+  Future<PageResponse> getUserBets(
+    int userId, {
+    int page = 0,
+    int size = 10,
+  }) async {
+
+    final response = await apiClient.get(
+      "/bets/user/$userId?page=$page&size=$size",
+    );
+
+    return PageResponse.fromJson(
+      response,
+      Bet.fromJson,
+    );
+  }
+
+  Future<PageResponse> getUserPredictions(
+    int userId, {
+    int page = 0,
+    int size = 10,
+  }) async {
+
+    final response = await apiClient.get(
+      "/predictions/user/$userId?page=$page&size=$size",
+    );
+
+    return PageResponse.fromJson(
+      response,
+      Prediction.fromJson,
+    );
   }
 
 }

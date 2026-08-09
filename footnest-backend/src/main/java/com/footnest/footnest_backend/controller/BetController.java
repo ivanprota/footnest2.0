@@ -33,8 +33,27 @@ public class BetController {
         );
     }
 
+    @GetMapping("/user/{userId}")
+    public PageResponse<BetDTO> getUserBets(
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) 
+    {
+        return betService.findPageByUserId(
+                userId,
+                page,
+                size
+        );
+    }
+
     @PostMapping
     public BetDTO create(Authentication authentication, @RequestBody CreateBetRequest request){
         return betService.create(authentication.getName(), request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBet(@PathVariable Long id, Authentication authentication) {
+        betService.deleteBet(id, authentication.getName());
     }
 }

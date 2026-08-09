@@ -36,6 +36,11 @@ class AppSidebar extends StatelessWidget {
       ),
 
       (
+        Icons.people,
+        "Utenti"
+      ),
+
+      (
         Icons.person,
         "Profilo",
       ),

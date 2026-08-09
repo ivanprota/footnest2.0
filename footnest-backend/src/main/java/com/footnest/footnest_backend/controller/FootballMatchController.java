@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,10 +30,10 @@ public class FootballMatchController {
         this.footballMatchService = footballMatchService;
     }
 
-    @GetMapping
-    public List<FootballMatch> getAll() {
-        return footballMatchService.findAll();
-    }
+    // @GetMapping
+    // public List<FootballMatch> getAll() {
+    //     return footballMatchService.findAll();
+    // }
 
     @GetMapping("/{id}")
     public FootballMatch getById(@PathVariable Long id) {
@@ -50,10 +50,10 @@ public class FootballMatchController {
         return footballMatchService.getMatchDetail(id);
     }
 
-    @PostMapping
-    public FootballMatch create(@RequestBody FootballMatch footballMatch) {
-        return footballMatchService.save(footballMatch);
-    }
+    // @PostMapping
+    // public FootballMatch create(@RequestBody FootballMatch footballMatch) {
+    //     return footballMatchService.save(footballMatch);
+    // }
 
     @PutMapping("/{id}")
     public MatchDetailDTO updateMatch(@PathVariable Long id, @RequestBody UpdateMatchRequest request) {

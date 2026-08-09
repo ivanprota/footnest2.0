@@ -50,7 +50,13 @@ class _LoginScreenState extends State<LoginScreen> {
     } 
     catch(e) {
       setState(() {
-        error = e.toString();
+
+        if (e.toString().contains("403")) {
+          error = "Account non ancora approvato. Attendi l'approvazione di un amministratore.";
+        }
+        else {
+          error = e.toString();
+        }
       });
     } 
     finally {
@@ -65,39 +71,54 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: 400,
+          width: 450,
           child: Card(
+            elevation: 8,
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(35),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
 
                   Text(
                     "Login",
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium,
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
 
                   TextField(
                     controller: usernameController,
                     decoration: const InputDecoration(
                       labelText: "Username",
+                      filled: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 18,
+                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 18),
 
                   TextField(
                     controller: passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(
                       labelText: "Password",
+                      filled: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 18,
+                      ),
+                      border: OutlineInputBorder(),
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 25),
 
                   if(error != null)
                     Text(
@@ -107,29 +128,50 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 15),
 
                   SizedBox(
                     width: double.infinity,
+                    height: 50,
                     child: ElevatedButton(
+                      style: ButtonStyle(
+                        mouseCursor: WidgetStateProperty.all(
+                          SystemMouseCursors.click,
+                        ),
+                      ),
                       onPressed: loading ? null : login,
                       child: loading
-                        ? const CircularProgressIndicator()
-                        : const Text("Accedi"),
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              "Accedi",
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
                     ),
                   ),
 
+                  const SizedBox(height: 10),
+
                   TextButton(
+                    style: ButtonStyle(
+                      mouseCursor: WidgetStateProperty.all(
+                        SystemMouseCursors.click,
+                      ),
+                    ),
                     onPressed: () {
                       context.go('/register');
                     },
-                    child: const Text("Non hai un account? Registrati"),
+                    child: const Text(
+                      "Non hai un account? Registrati",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
                   )
 
                 ],
-
               ),
-
             ),
           ),
         ),

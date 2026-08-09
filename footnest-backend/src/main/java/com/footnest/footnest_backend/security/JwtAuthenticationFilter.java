@@ -18,15 +18,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-
     private final JwtService jwtService;
-
     private final CustomUserDetailsService userDetailsService;
-
     private final UserRepository userRepository;
 
 
@@ -34,69 +30,46 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             JwtService jwtService,
             CustomUserDetailsService userDetailsService,
             UserRepository userRepository
-    ) {
+    ) 
+    {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
     }
 
 
-
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-
+                HttpServletRequest request, HttpServletResponse response, 
+                        FilterChain filterChain) throws ServletException, IOException {
 
         String header = request.getHeader("Authorization");
 
-
         if (header == null || !header.startsWith("Bearer ")) {
-
             filterChain.doFilter(request, response);
             return;
         }
-
 
         String token = header.substring(7);
-
-
         String username;
 
-
         try {
-
             username = jwtService.extractUsername(token);
-
         } catch (Exception e) {
-
             filterChain.doFilter(request, response);
             return;
         }
-
-
 
         if (username != null &&
                 SecurityContextHolder
                         .getContext()
                         .getAuthentication() == null) {
 
+            User user = userRepository.findByUsername(username).orElse(null);
 
-            User user = userRepository.findByUsername(username)
-                    .orElse(null);
+            if (user != null && jwtService.isValid(token, user)) {
 
-
-            if (user != null &&
-                    jwtService.isValid(token, user)) {
-
-
-                UserDetails userDetails =
-                        userDetailsService
-                                .loadUserByUsername(username);
-
-
+                UserDetails userDetails =userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
@@ -105,14 +78,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 userDetails.getAuthorities()
                         );
 
-
                 SecurityContextHolder
                         .getContext()
                         .setAuthentication(auth);
             }
-
         }
-
 
         filterChain.doFilter(request, response);
 

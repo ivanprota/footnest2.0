@@ -1,18 +1,17 @@
 package com.footnest.footnest_backend.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.footnest.footnest_backend.entity.User;
+import com.footnest.footnest_backend.dto.user.UserDTO;
 import com.footnest.footnest_backend.service.UserService;
 
 @RestController
@@ -27,28 +26,18 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAll() {
+    public List<UserDTO> getAll() {
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public User getById(@PathVariable Long id) {
+    public UserDTO getById(@PathVariable Long id) {
         return userService.findById(id);
     }
 
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return userService.save(user);
-    }
-
-    @PutMapping("/{id}")
-    public User update(@PathVariable Long id, @RequestBody User user) {
-        return userService.update(id, user);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        userService.delete(id);
+    @PutMapping("/{id}/approval")
+    public UserDTO updateApproval(@PathVariable Long id, @RequestBody Map<String, Boolean> body) {
+        return userService.updateApproval(id, body.get("approved"));
     }
 
 }

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import '/services/service_locator.dart';
 import '/services/profile_service.dart';
+import '/services/bet_service.dart';
+import '/services/profile_refresh_service.dart';
 
 import '/models/bet/bet.dart';
 
 import '/widgets/profile/bet_preview_tile.dart';
+import '/widgets/profile/status_filter_bar.dart';
 
 class MyBetsScreen extends StatefulWidget {
 
@@ -25,6 +28,7 @@ class _MyBetsScreenState extends State<MyBetsScreen> {
   bool loading = true;
   int currentPage = 0;
   int totalPages = 0;
+  String filter = "ALL";
 
   @override
   void initState() {
@@ -61,6 +65,60 @@ class _MyBetsScreenState extends State<MyBetsScreen> {
     }
   }
 
+  List<Bet> get filteredBets {
+
+    if(filter == "OPEN") {
+      return bets
+          .where((bet) => bet.status == "OPEN")
+          .toList();
+    }
+
+    if(filter == "WON") {
+      return bets
+          .where((bet) => bet.status == "WON")
+          .toList();
+    }
+
+    if(filter == "LOST") {
+      return bets
+          .where((bet) => bet.status == "LOST")
+          .toList();
+    }
+
+    return bets;
+  }
+
+  Future deleteBet(int id) async {
+
+    try {
+
+      final service = locator<BetService>();
+
+      await service.delete(id);
+
+      // aggiorna il profilo
+      locator<ProfileRefreshService>().refresh();
+
+      setState(() {
+        bets.removeWhere(
+          (bet) => bet.id == id,
+        );
+      });
+
+    } catch(e) {
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Errore durante l'eliminazione della schedina",
+          ),
+        ),
+      );
+
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,13 +134,25 @@ class _MyBetsScreenState extends State<MyBetsScreen> {
               child: Column(
                 children: [
 
+                StatusFilterBar(
+                  selected: filter,
+                  onChanged: (value) {
+                    setState(() {
+                      filter = value;
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
                   Expanded(
                     child: ListView.builder(
-                      itemCount: bets.length,
+                      itemCount: filteredBets.length,
                       itemBuilder: (_,index) {
 
                         return BetPreviewTile(
-                          bet: bets[index],
+                          bet: filteredBets[index],
+                          onDelete: deleteBet
                         );
                       },
                     ),

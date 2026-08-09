@@ -17,8 +17,11 @@ abstract final class AppRoutes {
 
   static const predictions = '/predictions';
 
+  static const users = "/users";
+
 
   static const addTeam = "/teams/add";
 
+  static const profileUser = '/profile/user';
 
 }

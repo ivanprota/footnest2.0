@@ -250,6 +250,9 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                                       actions:[
 
                                         TextButton(
+                                          style: ButtonStyle(
+                                            mouseCursor: WidgetStateProperty.all(SystemMouseCursors.click)
+                                          ),
                                           onPressed: (){
                                             Navigator.pop(
                                               context,
@@ -263,6 +266,9 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
 
 
                                         ElevatedButton(
+                                          style: ButtonStyle(
+                                            mouseCursor: WidgetStateProperty.all(SystemMouseCursors.click)
+                                          ),
                                           onPressed: (){
                                             Navigator.pop(
                                               context,

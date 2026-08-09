@@ -26,67 +26,43 @@ public class UserProfileService {
             UserRepository userRepository,
             BetRepository betRepository,
             PredictionRepository predictionRepository
-    ){
-
+    )
+    {
         this.userRepository = userRepository;
         this.betRepository = betRepository;
         this.predictionRepository = predictionRepository;
-
     }
 
     public UserProfileDTO getProfile(String username) {
-        User user =
-                userRepository
-                .findByUsername(username)
-                .orElseThrow();
+        User user = userRepository.findByUsername(username).orElseThrow();
+        return buildProfile(user);
+    }
 
-        List<Bet> bets =
-                betRepository
-                .findByUserId(user.getId());
+    public UserProfileDTO getProfileById(Long id) {
+        User user = userRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Utente non trovato"));
+        
+        return buildProfile(user);
+    }
 
-        List<Prediction> predictions =
-                predictionRepository
-                .findByUserId(user.getId());
+    private UserProfileDTO buildProfile(User user) {
 
-        int wonBets =
-                (int) bets.stream()
-                .filter(b -> b.getStatus() == Bet.BetStatus.WON)
-                .count();
+        List<Bet> bets = betRepository.findByUserId(user.getId());
+        List<Prediction> predictions = predictionRepository.findByUserId(user.getId());
 
-        int lostBets =
-                (int) bets.stream()
-                .filter(b -> b.getStatus() == Bet.BetStatus.LOST)
-                .count();
+        int wonBets = (int) bets.stream().filter(b -> b.getStatus() == Bet.BetStatus.WON).count();
+        int lostBets = (int) bets.stream().filter(b -> b.getStatus() == Bet.BetStatus.LOST).count();
+        int openBets = (int) bets.stream().filter(b -> b.getStatus() == Bet.BetStatus.OPEN).count();
 
-        int openBets =
-                (int) bets.stream()
-                .filter(b -> b.getStatus() == Bet.BetStatus.OPEN)
-                .count();
-
-        int wonPredictions =
-        (int) predictions.stream()
-        .filter(p ->
+        int wonPredictions = (int) predictions.stream().filter(p ->
                 Boolean.TRUE.equals(p.getSettled()) &&
-                Boolean.TRUE.equals(p.getWon())
-        )
-        .count();
+                Boolean.TRUE.equals(p.getWon())).count();
 
-
-        int lostPredictions =
-        (int) predictions.stream()
-        .filter(p ->
+        int lostPredictions = (int) predictions.stream().filter(p ->
                 Boolean.TRUE.equals(p.getSettled()) &&
-                Boolean.FALSE.equals(p.getWon())
-        )
-        .count();
+                Boolean.FALSE.equals(p.getWon())).count();
 
-
-        int openPredictions =
-        (int) predictions.stream()
-        .filter(p ->
-                !Boolean.TRUE.equals(p.getSettled())
-        )
-        .count();
+        int openPredictions = (int) predictions.stream().filter(p -> !Boolean.TRUE.equals(p.getSettled())).count();
 
         return new UserProfileDTO(
                 user.getUsername(),
@@ -101,6 +77,7 @@ public class UserProfileService {
                 lostPredictions,
                 openPredictions
         );
+
     }
 
 }

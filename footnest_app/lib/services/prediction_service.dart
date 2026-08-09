@@ -57,4 +57,23 @@ class PredictionService {
     );
   }
 
+  Future<Prediction> updateStatus(
+    int id,
+    bool settled,
+    bool? won,
+  ) async {
+
+    final response =
+    await apiClient.put(
+      "/predictions/$id/status",
+      {
+        "settled": settled,
+        "won": won,
+      },
+    );
+
+    return Prediction.fromJson(response);
+
+  }
+
 }

@@ -20,8 +20,12 @@ public class ProfileController {
 
     @GetMapping
     public UserProfileDTO getProfile(Authentication authentication) {
-        return userProfileService
-                .getProfile(authentication.getName());
+        return userProfileService.getProfile(authentication.getName());
+    }
+
+    @GetMapping("/{id}")
+    public UserProfileDTO getUserProfile(@PathVariable Long id) {
+        return userProfileService.getProfileById(id);
     }
 
 }
