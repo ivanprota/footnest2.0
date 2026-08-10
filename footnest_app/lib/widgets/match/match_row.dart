@@ -30,10 +30,7 @@ class _MatchRowState extends State<MatchRow> {
     return "${ApiConfig.baseUrl}/uploads/$path";
   }
 
-  bool get finished =>
-      widget.match.homeGoals != -1 &&
-      widget.match.awayGoals != -1;
-
+  bool get isPlayed => widget.match.status.toLowerCase() == "played";
 
   @override
   Widget build(BuildContext context) {
@@ -129,35 +126,38 @@ class _MatchRowState extends State<MatchRow> {
 
               // ORARIO / RISULTATO
               SizedBox(
-                width:80,
+                width: 80,
                 child: Column(
                   children: [
 
                     Text(
-                      finished
-                      ? "${widget.match.homeGoals} - ${widget.match.awayGoals}"
-                      : widget.match.kickoffText,
-                      style:
-                      const TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                        fontSize:16,
+                      isPlayed
+                          ? "${widget.match.homeGoals ?? 0} - ${widget.match.awayGoals ?? 0}"
+                          : widget.match.kickoffText,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
 
-                    if(!finished)
+                    if (isPlayed)
+                      const Text(
+                        "FT",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey,
+                        ),
+                      )
+                    else
                       Text(
                         widget.match.status == "SCHEDULED"
                             ? "Programmato"
                             : widget.match.status,
-                        style:
-                        TextStyle(
-                          fontSize:11,
-                          color:
-                          Colors.grey[600],
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[600],
                         ),
-
-                      )
+                      ),
 
                   ],
                 ),

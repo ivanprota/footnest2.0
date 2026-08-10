@@ -1,5 +1,6 @@
 package com.footnest.footnest_backend.service;
 
+import com.footnest.footnest_backend.mapper.MatchSummaryMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,6 +27,7 @@ import com.footnest.footnest_backend.repository.FootballMatchRepository;
 @Service
 public class FootballMatchService {
     
+    private final MatchSummaryMapper matchSummaryMapper;
     private final FootballMatchRepository footballMatchRepository;
     private final FootballMatchMapper footballMatchMapper;
     private final CompetitionSeasonMapper competitionSeasonMapper;
@@ -37,12 +39,13 @@ public class FootballMatchService {
         FootballMatchMapper footballMatchMapper,
         CompetitionSeasonMapper competitionSeasonMapper,
         MatchStatisticsMapper matchStatisticsMapper,
-        StandingService standingService) {
+        StandingService standingService, MatchSummaryMapper matchSummaryMapper) {
         this.footballMatchRepository = footballMatchRepository;
         this.footballMatchMapper = footballMatchMapper;
         this.competitionSeasonMapper = competitionSeasonMapper;
         this.matchStatisticsMapper = matchStatisticsMapper;
         this.standingService = standingService;
+        this.matchSummaryMapper = matchSummaryMapper;
     }
 
     public List<FootballMatch> findAll() {
@@ -115,6 +118,19 @@ public class FootballMatchService {
                 match.getSeason().getName(),
                 statistics
         );
+    }
+
+    public List<MatchSummaryDTO> findMatchesByCompetitionSeason(
+            Long competitionSeasonId
+    ) {
+
+        return footballMatchRepository
+                .findByCompetitionSeasonIdOrderByMatchdayAscDateAsc(
+                        competitionSeasonId
+                )
+                .stream()
+                .map(matchSummaryMapper::toDTO)
+                .toList();
     }
 
     public FootballMatch save(FootballMatch footballMatch) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:footnest_app/services/match_refresh_service.dart';
 import 'package:footnest_app/services/profile_refresh_service.dart';
 
 import '/services/service_locator.dart';
@@ -48,9 +49,25 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
 
   List<Prediction> betSlip = [];
 
+  late final MatchRefreshService matchRefreshService;
+
   @override
   void initState() {
     super.initState();
+    matchRefreshService = locator<MatchRefreshService>();
+    matchRefreshService.addListener(_onMatchesChanged);
+    loadData();
+  }
+
+  @override
+  void dispose() {
+    matchRefreshService.removeListener(_onMatchesChanged);
+    super.dispose();
+  }
+
+  void _onMatchesChanged() {
+    if (!mounted) return;
+
     loadData();
   }
 
@@ -63,20 +80,43 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
         .toList();
   }
 
-  Future<void> loadData() async {
+  Future loadData() async {
     final matches =
-        await footballMatchService
-            .getMatchesByDate(
-              selectedDate,
-            );
+        await footballMatchService.getMatchesByDate(
+          selectedDate,
+        );
 
-    final myPredictions = await predictionService.getMyPredictions();
+    for (final competition in matches) {
+      competition.matches.sort((a, b) {
+
+        final timeA = a.kickoffTime;
+        final timeB = b.kickoffTime;
+
+        if (timeA == null && timeB == null) {
+          return 0;
+        }
+
+        if (timeA == null) {
+          return 1;
+        }
+
+        if (timeB == null) {
+          return -1;
+        }
+
+        return timeA.compareTo(timeB);
+      });
+    }
+
+    final myPredictions =
+        await predictionService.getMyPredictions();
+
+    if (!mounted) return;
 
     setState(() {
       competitions = matches;
       predictions = myPredictions;
     });
-
   }
 
   Future deletePrediction(int id) async {
@@ -117,12 +157,23 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
 
   void addToBetSlip(Prediction prediction) {
 
+    if (isMatchPlayed(prediction.matchId)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Non puoi inserire in schedina una partita già giocata.",
+          ),
+        ),
+      );
+
+      return;
+    }
+
     final alreadyExists = betSlip.any(
       (p) => p.matchId == prediction.matchId,
     );
 
     if (alreadyExists) {
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -137,7 +188,6 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
     setState(() {
       betSlip.add(prediction);
     });
-
   }
 
   void openBetSlip() {
@@ -297,6 +347,18 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
     );
   }
 
+  bool isMatchPlayed(int matchId) {
+    for (final competition in competitions) {
+      for (final match in competition.matches) {
+        if (match.id == matchId) {
+          return match.status == "played";
+        }
+      }
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -358,7 +420,7 @@ class _PredictionsScreenState extends State<PredictionsScreen> with AutomaticKee
                   onCreatePrediction: createPrediction,
                   onAddToBetSlip: addToBetSlip,
                   isInBetSlip: (prediction) {
-                    return betSlip.any((p) => p.id == prediction.matchId,);
+                    return betSlip.any((p) => p.matchId == prediction.matchId,);
                   },
                 );
 

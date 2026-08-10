@@ -73,6 +73,7 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isPlayed = widget.match.status.toLowerCase() == "played";
     return Card(
       margin: const EdgeInsets.symmetric(
         horizontal:12,
@@ -123,11 +124,29 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                 const SizedBox(width:15),
 
 
-                Text(
-                  widget.match.kickoffText,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  children: [
+
+                    Text(
+                      widget.match.status.toLowerCase() == "played"
+                          ? "${widget.match.homeGoals ?? 0} - ${widget.match.awayGoals ?? 0}"
+                          : widget.match.kickoffText,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+
+                    if (widget.match.status.toLowerCase() == "played")
+                      const Text(
+                        "FT",
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey,
+                        ),
+                      ),
+
+                  ],
                 ),
 
 
@@ -213,10 +232,15 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                               Icons.check_circle,
                               color: Colors.green,
                             )
-                          : IconButton(
-                              icon: const Icon(
-                                Icons.add_circle_outline,
-                                color: Colors.green,
+                          : isPlayed
+                            ? const Icon(
+                              Icons.lock_outline,
+                              color: Colors.grey,
+                            )
+                            : IconButton(
+                                icon: const Icon(
+                                  Icons.add_circle_outline,
+                                  color: Colors.green,
                               ),
                               tooltip: "Aggiungi alla schedina",
                               mouseCursor: SystemMouseCursors.click,
@@ -307,7 +331,7 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
 
               const SizedBox(height:8),
 
-              if (widget.match.status != "PLAYED")
+              if (!isPlayed)
                 if(!adding)
                   SizedBox(
                     width: double.infinity,

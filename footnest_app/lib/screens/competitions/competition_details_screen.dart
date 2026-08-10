@@ -8,6 +8,7 @@ import '/services/competition_service.dart';
 import '/widgets/competition/competition_header.dart';
 import '/widgets/competition/season_selector.dart';
 import '/widgets/competition/standings_section.dart';
+//import '/widgets/competition/competition_matches_section.dart';
 import '/routes/routes.dart';
 
 class CompetitionDetailsScreen extends StatefulWidget {
@@ -35,16 +36,6 @@ class _CompetitionDetailsScreenState extends State<CompetitionDetailsScreen> {
   void initState() {
     super.initState();
     competitionFuture = competitionService.getCompetitionById(widget.competitionId);
-  }
-
-  void setDefaultSeason(Competition competition) {
-    if (selectedSeason == null && competition.seasons.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          selectedSeason = competition.seasons.first;
-        });
-      });
-    }
   }
 
   @override
@@ -77,8 +68,6 @@ class _CompetitionDetailsScreenState extends State<CompetitionDetailsScreen> {
             );
           }
 
-          setDefaultSeason(competition);
-
           if(selectedSeason == null && competition.seasons.isNotEmpty) {
             selectedSeason = competition.seasons.first;
           }
@@ -110,7 +99,11 @@ class _CompetitionDetailsScreenState extends State<CompetitionDetailsScreen> {
                 },
               ),
 
-              const SizedBox(height: 30)
+              const SizedBox(height: 30),
+
+              // CompetitionMatchesSection(competitionSeasonId: selectedSeason?.id),
+
+              // const SizedBox(height: 30,)
 
             ],
           );

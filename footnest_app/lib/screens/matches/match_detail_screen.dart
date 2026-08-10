@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:footnest_app/services/match_refresh_service.dart';
 
 import '/models/match/match_detail.dart';
 import '/services/football_match_service.dart';
@@ -221,6 +222,7 @@ class _MatchDetailScreenState extends State<MatchDetailScreen> {
     await loadMatch();
 
     locator<TeamRefreshService>().refresh();
+    locator<MatchRefreshService>().refresh();
 
     if(mounted){
 

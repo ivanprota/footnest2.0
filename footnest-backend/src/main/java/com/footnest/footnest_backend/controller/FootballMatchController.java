@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.footnest.footnest_backend.dto.footballmatch.CompetitionMatchesDTO;
 import com.footnest.footnest_backend.dto.footballmatch.MatchDetailDTO;
+import com.footnest.footnest_backend.dto.footballmatch.MatchSummaryDTO;
 import com.footnest.footnest_backend.dto.footballmatch.UpdateMatchRequest;
 import com.footnest.footnest_backend.entity.FootballMatch;
 import com.footnest.footnest_backend.service.FootballMatchService;
@@ -48,6 +49,15 @@ public class FootballMatchController {
     @GetMapping("/{id}/details")
     public MatchDetailDTO getMatchDetail(@PathVariable Long id) {
         return footballMatchService.getMatchDetail(id);
+    }
+
+    @GetMapping("/competition-season/{competitionSeasonId}")
+    public List<MatchSummaryDTO> getMatchesByCompetitionSeason(
+            @PathVariable Long competitionSeasonId
+    ) {
+        return footballMatchService.findMatchesByCompetitionSeason(
+                competitionSeasonId
+        );
     }
 
     // @PostMapping

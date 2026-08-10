@@ -80,4 +80,6 @@ public interface FootballMatchRepository extends JpaRepository<FootballMatch, Lo
             @Param("teamId") Long teamId
     );
 
+    List<FootballMatch> findByCompetitionSeasonIdOrderByMatchdayAscDateAsc(Long competitionSeasonId);
+
 }

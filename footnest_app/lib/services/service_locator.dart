@@ -17,6 +17,7 @@ import '/services/profile_refresh_service.dart';
 import '/services/user_service.dart';
 import '/services/team_statistics_service.dart';
 import '/services/team_refresh_service.dart';
+import '/services/match_refresh_service.dart';
 
 final locator = GetIt.instance;
 
@@ -119,6 +120,10 @@ void setupLocator() {
 
   locator.registerLazySingleton<TeamRefreshService>(
     () => TeamRefreshService(),
+  );
+
+  locator.registerLazySingleton<MatchRefreshService>(
+    () => MatchRefreshService(),
   );
 
 }

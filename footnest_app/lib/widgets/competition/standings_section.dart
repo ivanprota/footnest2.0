@@ -45,7 +45,10 @@ class _StandingSectionState extends State<StandingsSection> {
     super.didUpdateWidget(oldWidget);
     if(oldWidget.competitionSeasonId
         != widget.competitionSeasonId){
-      _loadStandings();
+      
+      setState(() {
+        _loadStandings();
+      });
     }
   }
 
