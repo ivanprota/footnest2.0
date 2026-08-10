@@ -1,3 +1,4 @@
+import 'package:footnest_app/screens/competitions/competitions_calendar_screen.dart';
 import 'package:footnest_app/services/auth_service.dart';
 import 'package:footnest_app/services/service_locator.dart';
 import 'package:go_router/go_router.dart';
@@ -184,6 +185,23 @@ final GoRouter appRouter = GoRouter(
                       ),
                     );
                   },
+                  routes: [
+
+                    GoRoute(
+                      path: 'calendar',
+                      builder: (context, state) {
+
+                        final seasonId = int.parse(
+                          state.uri.queryParameters['season']!,
+                        );
+
+                        return CompetitionCalendarScreen(
+                          competitionSeasonId: seasonId,
+                        );
+                      },
+                    ),
+
+                  ]
                 ),
 
               ],

@@ -106,12 +106,32 @@ class _MatchSummaryCardState extends State<MatchSummaryCard> {
 
                   const SizedBox(height:10),
 
-                  Text(
-                    DateFormat("dd-MM-yyyy")
-                        .format(match.date),
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                    ),
+                  Column(
+                    children: [
+
+                      Text(
+                        DateFormat("dd-MM-yyyy")
+                            .format(match.date),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+
+                      if (match.kickoffTime != null &&
+                          match.kickoffTime!.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3),
+                          child: Text(
+                            match.kickoffText,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+
+                    ],
                   ),
 
                 ],
@@ -125,34 +145,34 @@ class _MatchSummaryCardState extends State<MatchSummaryCard> {
   }
 
   Widget _team(String name, String logo) {
-    return SizedBox(
-      width:90,
+    return Expanded(
       child: Column(
         children: [
-
           Image.network(
             logo,
-            height:35,
-            width:35,
-            errorBuilder: (_,__,___){
+            height: 40,
+            width: 40,
+            fit: BoxFit.contain,
+            errorBuilder: (_, __, ___) {
               return const Icon(
                 Icons.shield,
-                size:35,
+                size: 40,
               );
             },
           ),
 
-          const SizedBox(height:5),
+          const SizedBox(height: 6),
 
           Text(
             name,
-            maxLines:1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-
         ],
-
       ),
     );
   }

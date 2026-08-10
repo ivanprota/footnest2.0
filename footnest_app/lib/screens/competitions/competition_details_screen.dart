@@ -8,7 +8,6 @@ import '/services/competition_service.dart';
 import '/widgets/competition/competition_header.dart';
 import '/widgets/competition/season_selector.dart';
 import '/widgets/competition/standings_section.dart';
-//import '/widgets/competition/competition_matches_section.dart';
 import '/routes/routes.dart';
 
 class CompetitionDetailsScreen extends StatefulWidget {
@@ -101,9 +100,33 @@ class _CompetitionDetailsScreenState extends State<CompetitionDetailsScreen> {
 
               const SizedBox(height: 30),
 
-              // CompetitionMatchesSection(competitionSeasonId: selectedSeason?.id),
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton.icon(
+                  style: ButtonStyle(
+                    mouseCursor: WidgetStateProperty.all(SystemMouseCursors.click)
+                  ),
+                  icon: const Icon(Icons.calendar_month),
+                  label: const Text(
+                    "Calendario",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: selectedSeason == null
+                      ? null
+                      : () {
+                          context.push(
+                            "/competitions/${widget.competitionId}/calendar"
+                            "?season=${selectedSeason!.id}",
+                          );
+                        },
+                ),
+              ),
 
-              // const SizedBox(height: 30,)
+              const SizedBox(height: 30),
 
             ],
           );
