@@ -3,6 +3,8 @@ class MatchSummary {
   final int id;
   final String homeTeam;
   final String awayTeam;
+  final int homeTeamId;
+  final int awayTeamId;
   final String homeLogo;
   final String awayLogo;
   final DateTime date;
@@ -16,6 +18,8 @@ class MatchSummary {
     required this.id,
     required this.homeTeam,
     required this.awayTeam,
+    required this.homeTeamId,
+    required this.awayTeamId,
     required this.homeLogo,
     required this.awayLogo,
     required this.date,
@@ -31,6 +35,8 @@ class MatchSummary {
       id: json['id'],
       homeTeam: json['homeTeam'],
       awayTeam: json['awayTeam'],
+      homeTeamId: json['homeTeamId'],
+      awayTeamId: json['awayTeamId'],
       homeLogo: json['homeLogo'],
       awayLogo: json['awayLogo'],
       date: DateTime.parse(json['date']),

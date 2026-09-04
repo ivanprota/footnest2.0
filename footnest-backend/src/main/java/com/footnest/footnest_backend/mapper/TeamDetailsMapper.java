@@ -40,8 +40,34 @@ public class TeamDetailsMapper {
         dto.setLogoPath(teamDTO.getLogoPath());
         dto.setCompetitions(competitions);
 
+        List<String> form = lastMatches.stream()
+                .map(match -> {
+
+                    boolean isHome =
+                            match.getHomeTeam().getId()
+                            .equals(team.getId());
+
+                    int teamGoals = isHome
+                            ? match.getHomeGoals()
+                            : match.getAwayGoals();
+
+                    int opponentGoals = isHome
+                            ? match.getAwayGoals()
+                            : match.getHomeGoals();
+
+                    if (teamGoals > opponentGoals) {
+                        return "V";
+                    }
+
+                    if (teamGoals < opponentGoals) {
+                        return "S";
+                    }
+
+                    return "P";
+                }).toList();
+
         if (standing != null) {
-            StandingDTO standingDTO = standingMapper.toDTO(standing, position);
+            StandingDTO standingDTO = standingMapper.toDTO(standing, position, form);
             dto.setStanding(standingDTO);
         }
 

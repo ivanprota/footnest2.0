@@ -1,5 +1,7 @@
 package com.footnest.footnest_backend.mapper;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.footnest.footnest_backend.dto.standing.StandingDTO;
@@ -15,7 +17,7 @@ public class StandingMapper {
         this.teamMapper = teamMapper;
     }
 
-    public StandingDTO toDTO(Standing standing, Integer position){
+    public StandingDTO toDTO(Standing standing, Integer position, List<String> form) {
         StandingDTO dto = new StandingDTO();
 
         dto.setPosition(position);
@@ -31,6 +33,8 @@ public class StandingMapper {
         dto.setPoints(standing.getPoints());
 
         dto.setTotalXg(standing.getTotalXg());
+
+        dto.setForm(form);
 
         return dto;
     }

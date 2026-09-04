@@ -12,6 +12,7 @@ class Standing {
   final int goalsAgainst;
   final int points;
   final double totalXg;
+  final List<String> form;
 
   Standing({
     required this.team,
@@ -24,6 +25,7 @@ class Standing {
     required this.goalsAgainst,
     required this.points,
     required this.totalXg,
+    required this.form
   });
 
   factory Standing.fromJson(Map<String,dynamic> json){
@@ -35,11 +37,10 @@ class Standing {
       draws: json['draws'],
       losses: json['losses'],
       goalsFor: json['goalsFor'],
-      goalsAgainst:
-          json['goalsAgainst'],
+      goalsAgainst: json['goalsAgainst'],
       points: json['points'],
-      totalXg:
-          json['totalXg']?.toDouble() ?? 0,
+      totalXg: json['totalXg']?.toDouble() ?? 0,
+      form: List<String>.from(json['form'] ?? [])
     );
   }
 

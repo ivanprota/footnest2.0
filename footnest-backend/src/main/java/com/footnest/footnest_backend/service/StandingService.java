@@ -42,13 +42,43 @@ public class StandingService {
                     .orElseThrow(() -> new ResourceNotFoundException("Dati squadra per classifica non trovati con id: " +id));
     }
 
-    public List<StandingDTO> getByCompetitionSeason(Long competitionSeasonId) {
-        List<Standing> standings = standingRepository.findByCompetitionSeasonIdOrderByPointsDesc(competitionSeasonId);
+    public List<StandingDTO> getByCompetitionSeason(
+            Long competitionSeasonId
+    ) {
+
+        List<Standing> standings =
+                standingRepository
+                        .findByCompetitionSeasonIdOrderByPointsDesc(
+                                competitionSeasonId
+                        );
+
+        List<FootballMatch> matches =
+                footballMatchRepository
+                        .findByCompetitionSeasonIdAndStatus(
+                                competitionSeasonId,
+                                MatchStatus.PLAYED
+                        );
+
         int position = 1;
+
         List<StandingDTO> result = new ArrayList<>();
 
         for (Standing standing : standings) {
-            result.add(standingMapper.toDTO(standing, position));
+
+            List<String> form =
+                    calculateForm(
+                            standing.getTeam().getId(),
+                            matches
+                    );
+
+            result.add(
+                    standingMapper.toDTO(
+                            standing,
+                            position,
+                            form
+                    )
+            );
+
             position++;
         }
 
@@ -199,6 +229,84 @@ public class StandingService {
             }
         }
 
+    }
+
+    private List<String> calculateForm(
+            Long teamId,
+            List<FootballMatch> matches
+    ) {
+
+        return matches.stream()
+
+                // Solo le partite della squadra
+                .filter(match ->
+                        match.getHomeTeam().getId().equals(teamId)
+                        ||
+                        match.getAwayTeam().getId().equals(teamId)
+                )
+
+                // Dalla più recente alla più vecchia
+                .sorted(
+                        (a, b) -> {
+
+                            int dateComparison =
+                                    b.getDate().compareTo(a.getDate());
+
+                            if (dateComparison != 0) {
+                                return dateComparison;
+                            }
+
+                            if (a.getKickoffTime() == null
+                                    && b.getKickoffTime() == null) {
+                                return 0;
+                            }
+
+                            if (a.getKickoffTime() == null) {
+                                return 1;
+                            }
+
+                            if (b.getKickoffTime() == null) {
+                                return -1;
+                            }
+
+                            return b.getKickoffTime()
+                                    .compareTo(a.getKickoffTime());
+                        }
+                )
+
+                // Massimo ultime 5
+                .limit(5)
+
+                // V / S / P
+                .map(match -> {
+
+                    boolean isHome =
+                            match.getHomeTeam()
+                                    .getId()
+                                    .equals(teamId);
+
+                    int teamGoals =
+                            isHome
+                                    ? match.getHomeGoals()
+                                    : match.getAwayGoals();
+
+                    int opponentGoals =
+                            isHome
+                                    ? match.getAwayGoals()
+                                    : match.getHomeGoals();
+
+                    if (teamGoals > opponentGoals) {
+                        return "V";
+                    }
+
+                    if (teamGoals < opponentGoals) {
+                        return "S";
+                    }
+
+                    return "P";
+                })
+
+                .toList();
     }
 
 }

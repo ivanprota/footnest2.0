@@ -147,12 +147,37 @@ class _StandingRowState extends State<StandingRow> {
                 ),
 
                 SizedBox(
-                  width: 40,
+                  width: 60,
                   child: Text(
                     "${widget.standing.points}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                SizedBox(
+                  width: 130,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      5,
+                      (index) {
+                        final form = widget.standing.form;
+
+                        final result =
+                            index < form.length
+                                ? form[index]
+                                : "?";
+
+                        return Padding(
+                          padding: EdgeInsets.only(left: index == 0 ? 0 : 4),
+                          child: _FormIndicator(
+                            result: result,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -165,4 +190,54 @@ class _StandingRowState extends State<StandingRow> {
     );
   }
 
+}
+
+class _FormIndicator extends StatelessWidget {
+
+  final String result;
+
+  const _FormIndicator({
+    required this.result,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+
+    late Color color;
+
+    switch (result.toUpperCase()) {
+      case "V":
+        color = Colors.green;
+        break;
+
+      case "S":
+        color = Colors.red;
+        break;
+
+      case "P":
+        color = Colors.amber;
+        break;
+
+      default:
+        color = Colors.grey;
+    }
+
+    return Container(
+      width: 22,
+      height: 22,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: Text(
+        result.toUpperCase(),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 }

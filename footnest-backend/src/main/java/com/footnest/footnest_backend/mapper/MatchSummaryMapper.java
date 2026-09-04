@@ -18,12 +18,10 @@ public class MatchSummaryMapper {
         MatchSummaryDTO dto = new MatchSummaryDTO();
 
         dto.setId(match.getId());
-        dto.setHomeTeam(
-            match.getHomeTeam().getName()
-        );
-        dto.setAwayTeam(
-            match.getAwayTeam().getName()
-        );
+        dto.setHomeTeam(match.getHomeTeam().getName());
+        dto.setAwayTeam(match.getAwayTeam().getName());
+        dto.setHomeTeamId(match.getHomeTeam().getId());
+        dto.setAwayTeamId(match.getAwayTeam().getId());
         dto.setHomeLogo(
             appConfig.getBaseUrl()
             + "/uploads/"

@@ -21,7 +21,7 @@ public class JwtService {
     private final SecretKey key =
             Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
-    private final long expiration = 1000 * 60 * 60 * 24; // 24 ore
+    private final long expiration = 1000 * 60 * 60 * 24 * 365; // 1 anno
 
     public String generateToken(User user) {
         return Jwts.builder()

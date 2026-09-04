@@ -11,7 +11,7 @@ import '/services/team_refresh_service.dart';
 
 class TeamStatisticsScreen extends StatefulWidget {
   final int teamId;
-
+ 
   const TeamStatisticsScreen({
     super.key,
     required this.teamId,
@@ -515,47 +515,38 @@ class _TeamStatisticsScreenState
                     children: [
 
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceAround,
-
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
-
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
 
-                          Expanded(
-                            child:
-                                _buildTeamStatisticsColumn(
-                              name: match.homeTeam,
-                              logo: match.homeLogo,
-                              statistics:
-                                  match.homeStatistics,
-                            ),
-                          ),
-
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(
-                              horizontal: 12,
-                            ),
-
+                          // Risultato + data + ora
+                          SizedBox(
+                            width: 70,
                             child: Column(
                               children: [
 
-                                const SizedBox(
-                                  height: 12,
-                                ),
+                                if (match.homeGoals != null &&
+                                    match.awayGoals != null)
+                                  _ResultIndicator(
+                                    homeGoals: match.homeGoals,
+                                    awayGoals: match.awayGoals,
+                                    teamId: match.teamId,
+                                    homeTeamId: match.homeTeamId,
+                                    awayTeamId: match.awayTeamId,
+                                  )
+                                else
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+
+                                const SizedBox(height: 8),
 
                                 Text(
-                                  "${match.homeGoals ?? '-'}"
-                                  " - "
-                                  "${match.awayGoals ?? '-'}",
-
-                                  style:
-                                      const TextStyle(
-                                    fontSize: 22,
-                                    fontWeight:
-                                        FontWeight.bold,
+                                  DateFormat("dd-MM-yyyy").format(match.date),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold
                                   ),
                                 ),
 
@@ -563,28 +554,60 @@ class _TeamStatisticsScreenState
                             ),
                           ),
 
+
+                          const SizedBox(width: 12),
+
+                          // Squadre
                           Expanded(
-                            child:
-                                _buildTeamStatisticsColumn(
-                              name: match.awayTeam,
-                              logo: match.awayLogo,
-                              statistics:
-                                  match.awayStatistics,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Expanded(
+                                  child: _buildTeamStatisticsColumn(
+                                    name: match.homeTeam,
+                                    logo: match.homeLogo,
+                                    statistics: match.homeStatistics,
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  child: Column(
+                                    children: [
+
+                                      const SizedBox(height: 12),
+
+                                      Text(
+                                        "${match.homeGoals ?? '-'}"
+                                        " - "
+                                        "${match.awayGoals ?? '-'}",
+                                        style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+
+                                Expanded(
+                                  child: _buildTeamStatisticsColumn(
+                                    name: match.awayTeam,
+                                    logo: match.awayLogo,
+                                    statistics: match.awayStatistics,
+                                  ),
+                                ),
+
+                              ],
                             ),
                           ),
 
                         ],
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Text(
-                        DateFormat("dd-MM-yyyy")
-                            .format(match.date),
-
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                        ),
                       ),
 
                     ],
@@ -743,4 +766,70 @@ class _TeamStatisticsScreenState
     );
   }
 
+}
+
+class _ResultIndicator extends StatelessWidget {
+
+  final int? homeGoals;
+  final int? awayGoals;
+
+  final int teamId;
+  final int homeTeamId;
+  final int awayTeamId;
+
+  const _ResultIndicator({
+    required this.homeGoals,
+    required this.awayGoals,
+    required this.teamId,
+    required this.homeTeamId,
+    required this.awayTeamId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+
+    if (homeGoals == null || awayGoals == null) {
+      return const SizedBox.shrink();
+    }
+
+    final bool isHome = teamId == homeTeamId;
+
+    final int teamGoals =
+        isHome ? homeGoals! : awayGoals!;
+
+    final int opponentGoals =
+        isHome ? awayGoals! : homeGoals!;
+
+    late String result;
+    late Color color;
+
+    if (teamGoals > opponentGoals) {
+      result = "V";
+      color = Colors.green;
+    } else if (teamGoals < opponentGoals) {
+      result = "S";
+      color = Colors.red;
+    } else {
+      result = "P";
+      color = Colors.amber;
+    }
+
+    return Container(
+      width: 30,
+      height: 30,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+      child: Text(
+        result,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 }

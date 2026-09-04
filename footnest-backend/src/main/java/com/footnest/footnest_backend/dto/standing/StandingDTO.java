@@ -1,5 +1,7 @@
 package com.footnest.footnest_backend.dto.standing;
 
+import java.util.List;
+
 import com.footnest.footnest_backend.dto.team.TeamDTO;
 
 import lombok.*;
@@ -21,5 +23,6 @@ public class StandingDTO {
     private Integer goalsAgainst;
     private Integer points;
     private Double totalXg;
+    private List<String> form;
 
 }

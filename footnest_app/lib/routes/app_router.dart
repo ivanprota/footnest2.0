@@ -1,6 +1,7 @@
 import 'package:footnest_app/screens/competitions/competitions_calendar_screen.dart';
 import 'package:footnest_app/services/auth_service.dart';
 import 'package:footnest_app/services/service_locator.dart';
+import 'package:footnest_app/services/auth_refresh_service.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +38,8 @@ final GlobalKey<NavigatorState> rootNavigatorKey =
 final GoRouter appRouter = GoRouter(
 
   initialLocation: AppRoutes.login,
+
+  refreshListenable: locator<AuthRefreshService>(),
 
   redirect: (context, state) async {
     final logged = await locator<AuthService>().isLogged();

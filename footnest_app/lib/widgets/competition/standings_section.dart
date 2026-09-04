@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '/services/match_refresh_service.dart';
 import '/models/standing/standing.dart';
 import '/services/standing_service.dart';
 import '/services/service_locator.dart';
@@ -23,12 +24,29 @@ class StandingsSection extends StatefulWidget {
 class _StandingSectionState extends State<StandingsSection> {
 
   late Future<List<Standing>> standingsFutute;
-  final StandingService standingService = locator();
+  final StandingService standingService = locator<StandingService>();
+
+  final MatchRefreshService matchRefreshService = locator<MatchRefreshService>();
 
   @override
   void initState() {
     super.initState();
     _loadStandings();
+    matchRefreshService.addListener(_onMatchesChanged);
+  }
+
+  void _onMatchesChanged() {
+    if (!mounted) return;
+
+    setState(() {
+      _loadStandings();
+    });
+  }
+
+  @override
+  void dispose() {
+    matchRefreshService.removeListener(_onMatchesChanged);
+    super.dispose();
   }
 
   void _loadStandings() {
@@ -137,7 +155,7 @@ class _StandingSectionState extends State<StandingsSection> {
                         SizedBox(
                           width: 35,
                           child: Text(
-                            "N",
+                            "P",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -145,7 +163,7 @@ class _StandingSectionState extends State<StandingsSection> {
                         SizedBox(
                           width: 35,
                           child: Text(
-                            "P",
+                            "S",
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -167,7 +185,7 @@ class _StandingSectionState extends State<StandingsSection> {
                         ),
 
                         SizedBox(
-                          width: 40,
+                          width: 67,
                           child: Text(
                             "Pt",
                             textAlign: TextAlign.center,
@@ -177,8 +195,19 @@ class _StandingSectionState extends State<StandingsSection> {
                           ),
                         ),
 
+                        SizedBox(
+                          width: 130,
+                          child: Text(
+                            "Forma",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
+
 
 
                     const Divider(),

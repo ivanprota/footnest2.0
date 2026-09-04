@@ -7,11 +7,13 @@ class MatchesSection extends StatelessWidget {
 
   final String title;
   final List<MatchSummary> matches;
+  final int? teamId;
 
   const MatchesSection({
     super.key,
     required this.title,
     required this.matches,
+    this.teamId
   });
 
   @override
@@ -68,6 +70,7 @@ class MatchesSection extends StatelessWidget {
                               const EdgeInsets.only(bottom:8),
                           child: MatchSummaryCard(
                             match: match,
+                            teamId: teamId,
                           ),
                         ),
 

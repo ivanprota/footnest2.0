@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '/config/api_config.dart';
 import 'dart:io';
+import '/services/auth_refresh_service.dart';
+import '/services/service_locator.dart';
 
 class ApiClient {
 
@@ -76,23 +78,42 @@ class ApiClient {
     return _handleResponse(response);
   }
 
-  dynamic _handleResponse(
-      http.Response response
-  ) {
-    if(response.statusCode >= 200 &&
-       response.statusCode < 300) {
 
-      if(response.body.isEmpty) {
+  dynamic _handleResponse(http.Response response) {
+
+    if (response.statusCode >= 200 &&
+        response.statusCode < 300) {
+
+      if (response.body.isEmpty) {
         return null;
       }
 
       return jsonDecode(response.body);
     }
 
+    if (response.statusCode == 401 ||
+        response.statusCode == 403) {
+
+      _handleUnauthorized();
+    }
+
     throw Exception(
-      "Errore HTTP ${response.statusCode}: ${response.body}"
+      "Errore HTTP ${response.statusCode}: ${response.body}",
     );
   }
+
+  Future<void> _handleUnauthorized() async {
+
+    final prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.remove("token");
+    await prefs.remove("username");
+    await prefs.remove("admin");
+
+    locator<AuthRefreshService>().logout();
+  }
+
 
   Future uploadFile(
     String endpoint,

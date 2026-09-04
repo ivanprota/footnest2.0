@@ -177,6 +177,7 @@ class _CompetitionCalendarScreenState
                   ),
                   child: MatchSummaryCard(
                     match: match,
+                    showResultIndicator: false,
                   ),
                 ),
               ),

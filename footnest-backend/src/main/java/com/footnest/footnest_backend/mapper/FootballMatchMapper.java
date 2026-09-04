@@ -14,6 +14,8 @@ public class FootballMatchMapper {
                 match.getId(),
                 match.getHomeTeam().getName(),
                 match.getAwayTeam().getName(),
+                match.getHomeTeam().getId(),
+                match.getAwayTeam().getId(),
                 match.getHomeTeam().getLogoPath(),
                 match.getAwayTeam().getLogoPath(),
                 match.getDate(),

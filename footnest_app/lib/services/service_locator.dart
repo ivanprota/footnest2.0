@@ -18,6 +18,7 @@ import '/services/user_service.dart';
 import '/services/team_statistics_service.dart';
 import '/services/team_refresh_service.dart';
 import '/services/match_refresh_service.dart';
+import '/services/auth_refresh_service.dart';
 
 final locator = GetIt.instance;
 
@@ -124,6 +125,10 @@ void setupLocator() {
 
   locator.registerLazySingleton<MatchRefreshService>(
     () => MatchRefreshService(),
+  );
+
+  locator.registerLazySingleton<AuthRefreshService>(
+    () => AuthRefreshService(),
   );
 
 }

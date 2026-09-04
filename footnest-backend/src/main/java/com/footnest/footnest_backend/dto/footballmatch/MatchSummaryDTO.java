@@ -13,6 +13,8 @@ public class MatchSummaryDTO {
     private Long id;
     private String homeTeam;
     private String awayTeam;
+    private Long homeTeamId;
+    private Long awayTeamId;
     private String homeLogo;
     private String awayLogo;
     private LocalDate date;

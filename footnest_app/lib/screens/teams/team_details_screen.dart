@@ -118,6 +118,7 @@ class _TeamDetailsScreenState extends State<TeamDetailsScreen> {
                       child: MatchesSection(
                         title: "Ultime partite",
                         matches: team.lastMatches.take(10).toList(),
+                        teamId: widget.teamId,
                       ),
                     ),
 
