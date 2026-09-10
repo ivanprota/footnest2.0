@@ -66,7 +66,9 @@ class MatchInfoCard extends StatelessWidget {
             context,
             icon: Icons.access_time,
             title: "Orario",
-            value: match.kickoffTime ?? "Non impostato",
+            value: match.kickoffTime != null 
+                    ? match.kickoffTime!.substring(0, 5) 
+                    : "Non impostato",
             editable: editing,
             onTap: onPickTime,
           ),

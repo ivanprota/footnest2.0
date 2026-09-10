@@ -309,7 +309,7 @@ class _PredictionPreviewTileState extends State<PredictionPreviewTile> {
                       ),
 
                       Text(
-                        prediction.odd.toString(),
+                        prediction.odd.toStringAsFixed(2).toString(),
                         style: const TextStyle(
                           fontSize:18,
                           fontWeight: FontWeight.bold,

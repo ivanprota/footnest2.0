@@ -219,8 +219,18 @@ class _PredictionMatchCardState extends State<PredictionMatchCard> {
                         p.prediction,
                       ),
 
-                      subtitle: Text(
-                        "Quota @${p.odd}",
+                      subtitle: Text.rich(
+                        TextSpan(
+                          children: [
+                            const TextSpan(text: "Quota @"),
+                            TextSpan(
+                              text: p.odd.toStringAsFixed(2),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold
+                              )
+                            )
+                          ]
+                        )
                       ),
 
                       trailing: Row(

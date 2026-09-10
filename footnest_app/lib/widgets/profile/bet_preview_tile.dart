@@ -248,8 +248,8 @@ class _BetPreviewTileState extends State<BetPreviewTile> {
 
 
                                   Text(
-                                    "Pronostico: "
-                                    "${selection.prediction}",
+                                    // "Pronostico: "
+                                    selection.prediction,
                                   ),
 
                                   Text(
@@ -283,7 +283,7 @@ class _BetPreviewTileState extends State<BetPreviewTile> {
                         children: [
 
                           Text(
-                            "x${selection.odd}",
+                            "x${selection.odd.toStringAsFixed(2)}",
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize:16,

@@ -213,7 +213,7 @@ class _BetSlipScreenState extends State<BetSlipScreen> {
                                     const SizedBox(width:10),
 
                                     Text(
-                                      "@${prediction.odd}",
+                                      "@${prediction.odd.toStringAsFixed(2)}",
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.green,
